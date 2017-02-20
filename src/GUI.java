@@ -15,7 +15,7 @@ public class GUI extends JFrame implements Constants
 	private class GUIPanel extends JPanel
 	{
 		private Image image;
-		//@SuppressWarnings("unused")
+		//getImageFilePath
 		public GUIPanel(String imgString) throws IOException
 		{
 			image = ImageIO.read(new File(imgString));
@@ -25,10 +25,11 @@ public class GUI extends JFrame implements Constants
 		{
 			super.paintComponent(g);
 			
-			g.drawImage(image, 0, 0, this);
+			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 		}
 		public GUIPanel()
 		{
+			
 //			File imageFile = new File("/");
 //			//setSize(500, 500);
 //			setBackground(Color.blue);
@@ -69,41 +70,31 @@ public class GUI extends JFrame implements Constants
 		super(FRAME_TITLE);// title
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		//setLayout(new FlowLayout(FlowLayout.CENTER));
-		//setLayout(new GridLayout(1, 2, 3, 3));
-		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
 		
-		JPanel panel = new GUIPanel();
-		//add(panel, BorderLayout.CENTER);
-		add(panel);
-		
+		JPanel panel;
 		//draw background image.
-//		class imagePanel extends JComponent 
-//		{
-//			
-//			@Override
-//			protected void paintComponent(Graphics g)
-//			{
-//				super.paintComponent(g);
-//				try
-//				{
-//					Image img = ImageIO.read(new File("/Users/JonathanThomas/Desktop/treeImage.png"));
-//					g.drawImage(img, 0, 0, this);
-//				}
-//				catch(IOException e)
-//				{
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		try
+		{
+			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
+			getContentPane().add(panel);
+			
+			add(panel);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		//add(panel, BorderLayout.CENTER);
+		//add(panel);
+		
+		//getContentPane().add(new GUIPanel("/Users/JonathanThomas/Desktop/treeImage.png"));
 	}
 
 	public static void main(String[] args)
 	{
 		JFrame f = new GUI();
-		f.getContentPane().add(new GUIPanel("/Users/JonathanThomas/Desktop/treeImage.png"));
 		f.setVisible(true);
 	}
 }
