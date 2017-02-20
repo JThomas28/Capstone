@@ -25,7 +25,7 @@ public class GUI extends JFrame implements Constants
 		{
 			super.paintComponent(g);
 			
-			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			g.drawImage(image, -200, -100, getWidth(), getHeight(), this);
 		}
 		public GUIPanel()
 		{
