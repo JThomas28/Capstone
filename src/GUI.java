@@ -15,6 +15,7 @@ public class GUI extends JFrame implements Constants
 	private class GUIPanel extends JPanel
 	{
 		private Image image;
+		
 		//getImageFilePath
 		public GUIPanel(String imgString) throws IOException
 		{
@@ -26,26 +27,22 @@ public class GUI extends JFrame implements Constants
 			super.paintComponent(g);
 			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 		}
+		
 		public GUIPanel()
 		{
+			setSize(400, 400);
+			setBackground(Color.white);
 			
-//			File imageFile = new File("/");
-//			//setSize(500, 500);
-//			setBackground(Color.blue);
-//			
-//			JPanel panel2 = new JPanel();
-//			panel2.setSize(400, 400);
-//			panel2.setBackground(Color.BLACK);
-//			
-//			JButton uploadButton = new JButton();
-//			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
-//
-//			uploadButton.setText(CHOOSE_IMAGE_TEXT);
-//			uploadButton.addActionListener(new ActionListener()
-//			{
-//				@Override
-//				public void actionPerformed(ActionEvent e)
-//				{
+			JButton uploadButton = new JButton();
+			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
+
+			uploadButton.setText(CHOOSE_IMAGE_TEXT);
+			uploadButton.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					//open file explorer
 //					try
 //					{
 //						Desktop.getDesktop().open(imageFile);
@@ -54,13 +51,13 @@ public class GUI extends JFrame implements Constants
 //					{
 //						e1.printStackTrace();
 //					}
-//				}
-//			});
-//			add(uploadButton);
-//			add(fileFormatsAllowed);
-//
-//			uploadButton.setVisible(true);
-//			setFocusable(true);
+				}
+			});
+			add(uploadButton);
+			add(fileFormatsAllowed);
+
+			uploadButton.setVisible(true);
+			setFocusable(true);
 		}
 	}
 
@@ -83,10 +80,9 @@ public class GUI extends JFrame implements Constants
 		{
 			e.printStackTrace();
 		}
-		//add(panel, BorderLayout.CENTER);
-		//add(panel);
-		
-		//getContentPane().add(new GUIPanel("/Users/JonathanThomas/Desktop/treeImage.png"));
+		//add panel for uploading image
+		//JPanel panelForUploading = new GUIPanel();
+		//add(panelForUploading);
 	}
 
 	public static void main(String[] args)
