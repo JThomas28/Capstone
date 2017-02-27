@@ -89,6 +89,17 @@ public class FileChooser extends JPanel
         //Add the buttons and the log to this panel.
         //add(buttonPanel, BorderLayout.PAGE_START);
         add(logScrollPane, BorderLayout.CENTER);
+        int returnVal = fc.showOpenDialog(FileChooser.this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            chosenFile = file;
+            //This is where a real application would open the file.
+            log.append("Opening: " + file.getName() + "." + newline);
+        } else {
+            log.append("Open command cancelled by user." + newline);
+        }
+        log.setCaretPosition(log.getDocument().getLength());
     }
 
     public void actionPerformed(ActionEvent e) {
