@@ -76,7 +76,6 @@ public class GUI extends JFrame implements Constants
 
 		JPanel panel = new GUIPanel();
 		getContentPane().add(panel);
-		//add(panel);
 
 		// JPanel panel;
 		// draw background image.
