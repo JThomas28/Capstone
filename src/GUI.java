@@ -38,6 +38,10 @@ public class GUI extends JFrame implements Constants
 			JPanel panel2 = new JPanel();
 			JPanel panel3 = new JPanel();
 
+			panel1.setLayout(new FlowLayout());
+			panel2.setLayout(new FlowLayout());
+			panel3.setLayout(new FlowLayout());
+			
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
 			JButton uploadButton = new JButton(BROWSE);
 			JButton goButton = new JButton(GO);
