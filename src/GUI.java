@@ -76,7 +76,7 @@ public class GUI extends JFrame implements Constants
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 0,90));
 		
 		JPanel panel2 = new GUIPanel();
-		add(panel2);
+		//add(panel2);
 		
 		JPanel panel;
 		//draw background image.
@@ -89,6 +89,7 @@ public class GUI extends JFrame implements Constants
 		{
 			e.printStackTrace();
 		}
+		add(panel2);
 	}
 
 	public static void main(String[] args)
