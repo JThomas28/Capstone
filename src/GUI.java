@@ -84,7 +84,7 @@ public class GUI extends JFrame implements Constants
 //		JPanel uploadPanel = new JPanel();
 		
 		//frame.add(layeredPane, BorderLayout.CENTER);
-		frame2.add(layeredPane2, BorderLayout.CENTER);
+		//frame2.add(layeredPane2, BorderLayout.CENTER);
 		
 //		JPanel panel;
 //		//draw background image.
