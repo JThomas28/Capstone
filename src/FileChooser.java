@@ -1,7 +1,6 @@
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
 public class FileChooser extends JPanel
@@ -32,25 +31,8 @@ public class FileChooser extends JPanel
 		{
 			File file = fc.getSelectedFile();
 			chosenFile = file;
-			// This is where a real application would open the file.
-			//log.append("Opening: " + file.getName() + "." + newline);
 		}
 	}
-
-	/** Returns an ImageIcon, or null if the path was invalid. */
-//	protected static ImageIcon createImageIcon(String path)
-//	{
-//		java.net.URL imgURL = FileChooser.class.getResource(path);
-//		if (imgURL != null)
-//		{
-//			return new ImageIcon(imgURL);
-//		}
-//		else
-//		{
-//			System.err.println("Couldn't find file: " + path);
-//			return null;
-//		}
-//	}
 
 	private static void createAndShowGUI()
 	{
