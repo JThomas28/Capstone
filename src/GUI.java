@@ -69,20 +69,19 @@ public class GUI extends JFrame implements Constants
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
 		
-		JPanel panel;
-		//draw background image.
-		try
-		{
-			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
-			getContentPane().add(panel);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		//add panel for uploading image
-		//JPanel panelForUploading = new GUIPanel();
-		//add(panelForUploading);
+		JPanel panel = new GUIPanel();
+		
+//		JPanel panel;
+//		//draw background image.
+//		try
+//		{
+//			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
+//			getContentPane().add(panel);
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 
 	public static void main(String[] args)
