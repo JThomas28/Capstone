@@ -102,15 +102,15 @@ public class FileChooser extends JPanel
 		JPanel pane = new JPanel();
 		pane.add(new FileChooser());
 		pane.setVisible(true);
-		JFrame frame = new JFrame("FileChooser");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// Add content to the window.
-		frame.add(new FileChooser());
-
-		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
+//		JFrame frame = new JFrame("FileChooser");
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//		// Add content to the window.
+//		frame.add(new FileChooser());
+//
+//		// Display the window.
+//		frame.pack();
+//		frame.setVisible(true);
 	}
 
 	public static File getFile()
