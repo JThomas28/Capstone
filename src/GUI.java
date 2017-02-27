@@ -75,7 +75,8 @@ public class GUI extends JFrame implements Constants
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 90));
 
 		JPanel panel = new GUIPanel();
-		getContentPane().add(panel);
+		// getContentPane().add(panel);
+		add(panel);
 
 		// JPanel panel;
 		// draw background image.
