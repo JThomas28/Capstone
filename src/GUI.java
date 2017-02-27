@@ -74,6 +74,16 @@ public class GUI extends JFrame implements Constants
 //					 }
 				}
 			});
+			
+			goButton.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					
+				}
+				
+			});
 			add(panel1);
 			add(panel2);
 			add(panel3);
@@ -86,6 +96,11 @@ public class GUI extends JFrame implements Constants
 			panel2.add(zipcode);
 			panel3.add(goButton);
 		}
+	}
+	
+	public void secondGUI()
+	{
+		
 	}
 
 	public GUI()
