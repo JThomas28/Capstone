@@ -39,7 +39,7 @@ public class GUI extends JFrame implements Constants
 			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
 			
 			JLabel enterZipCode = new JLabel(ZIPCODE_TEXT);
-			TextField zipcode = new TextField();
+			JTextField zipcode = new JTextField(5);
 
 			//chooseFileText.setText(CHOOSE_IMAGE_TEXT);
 			//uploadButton.setText(BROWSE);// CHOOSE_IMAGE_TEXT);
