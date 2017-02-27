@@ -38,19 +38,19 @@ public class FileChooser extends JPanel
 	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
-	protected static ImageIcon createImageIcon(String path)
-	{
-		java.net.URL imgURL = FileChooser.class.getResource(path);
-		if (imgURL != null)
-		{
-			return new ImageIcon(imgURL);
-		}
-		else
-		{
-			System.err.println("Couldn't find file: " + path);
-			return null;
-		}
-	}
+//	protected static ImageIcon createImageIcon(String path)
+//	{
+//		java.net.URL imgURL = FileChooser.class.getResource(path);
+//		if (imgURL != null)
+//		{
+//			return new ImageIcon(imgURL);
+//		}
+//		else
+//		{
+//			System.err.println("Couldn't find file: " + path);
+//			return null;
+//		}
+//	}
 
 	private static void createAndShowGUI()
 	{
@@ -67,17 +67,6 @@ public class FileChooser extends JPanel
 
 	public static void main(String[] args)
 	{
-		// Schedule a job for the event dispatch thread:
-		// creating and showing this application's GUI.
 		createAndShowGUI();
-//		SwingUtilities.invokeLater(new Runnable()
-//		{
-//			public void run()
-//			{
-//				// Turn off metal's use of bold fonts
-//				//UIManager.put("swing.boldMetal", Boolean.FALSE);
-//				createAndShowGUI();
-//			}
-//		});
 	}
 }
