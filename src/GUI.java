@@ -87,7 +87,8 @@ public class GUI extends JFrame implements Constants
 	{
 		getContentPane().setLayout(new GridLayout(3, 1));
 		//picture first, estimated age, more info button
-		JButton moreInfoButton = new JButton();
+		JButton moreInfoButton = new JButton(MORE_INFO);
+		add(moreInfoButton);
 	}
 
 	public GUI()
