@@ -7,4 +7,5 @@ public interface Constants
 	public static final String BROWSE = "Browse...";
 	public static final String ZIPCODE_TEXT = "Enter Zipcode where tree was found:";
 	public static final String PATH_TEXTFIELD = "Path To Image:";
+	public static final String GO = "Go";
 }
