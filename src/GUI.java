@@ -84,17 +84,14 @@ public class GUI extends JFrame implements Constants
 				}
 				
 			});
-			add(panel1);
-			add(panel2);
-			add(panel3);
-			panel1.add(chooseFileText);
-			panel1.add(uploadButton);
-			panel1.add(pathTextFieldLabel);
-			panel2.add(pathToImage);
+			add(chooseFileText);
+			add(uploadButton);
+			add(pathTextFieldLabel);
+			add(pathToImage);
 			//add(fileFormatsAllowed);
-			panel2.add(enterZipCode);
-			panel2.add(zipcode);
-			panel3.add(goButton);
+			add(enterZipCode);
+			add(zipcode);
+			add(goButton);
 		}
 	}
 	
