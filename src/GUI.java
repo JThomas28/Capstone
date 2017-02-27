@@ -57,7 +57,7 @@ public class GUI extends JFrame implements Constants
 			add(fileFormatsAllowed);
 
 			uploadButton.setVisible(true);
-			setFocusable(true);
+			//setFocusable(true);
 		}
 	}
 
@@ -69,7 +69,10 @@ public class GUI extends JFrame implements Constants
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
 		
+		setLayout(new BorderLayout());
+		
 		JPanel panel = new GUIPanel();
+		add(panel, BorderLayout.CENTER);
 		
 //		JPanel panel;
 //		//draw background image.
