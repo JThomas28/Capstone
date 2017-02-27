@@ -12,82 +12,77 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements Constants
 {
-	private JFrame frame = new JFrame();
-    private JLayeredPane lpane = new JLayeredPane();
-    private JPanel panelBlue = new JPanel();
-    private JPanel panelGreen = new JPanel();
-	
-	//private class GUIPanel extends JPanel
-	//{
-//		private Image image;
-//		
-//		//getImageFilePath
-//		public GUIPanel(String imgString) throws IOException
-//		{
-//			image = ImageIO.read(new File(imgString));
-//		}
-//		
-//		public void paintComponent(Graphics g)
-//		{
-//			super.paintComponent(g);
-//			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-//		}
+	private class GUIPanel extends JPanel
+	{
+		private Image image;
 		
-//		public GUIPanel()
-//		{
-//			setSize(400, 400);
-//			setBackground(Color.white);
-//			
-//			JButton uploadButton = new JButton();
-//			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
-//
-//			uploadButton.setText(CHOOSE_IMAGE_TEXT);
-//			uploadButton.addActionListener(new ActionListener()
-//			{
-//				@Override
-//				public void actionPerformed(ActionEvent e)
-//				{
-//					//open file explorer
-////					try
-////					{
-////						Desktop.getDesktop().open(imageFile);
-////					}
-////					catch (IOException e1)
-////					{
-////						e1.printStackTrace();
-////					}
-//				}
-//			});
-//			add(uploadButton);
-//			add(fileFormatsAllowed);
-//
-//			uploadButton.setVisible(true);
-//			setFocusable(true);
-//		}
-//	}
+		//getImageFilePath
+		public GUIPanel(String imgString) throws IOException
+		{
+			image = ImageIO.read(new File(imgString));
+		}
+		
+		public void paintComponent(Graphics g)
+		{
+			super.paintComponent(g);
+			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+		}
+		
+		public GUIPanel()
+		{
+			setSize(400, 400);
+			setBackground(Color.white);
+			
+			JButton uploadButton = new JButton();
+			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
+
+			uploadButton.setText(CHOOSE_IMAGE_TEXT);
+			uploadButton.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					//open file explorer
+//					try
+//					{
+//						Desktop.getDesktop().open(imageFile);
+//					}
+//					catch (IOException e1)
+//					{
+//						e1.printStackTrace();
+//					}
+				}
+			});
+			add(uploadButton);
+			add(fileFormatsAllowed);
+
+			uploadButton.setVisible(true);
+			setFocusable(true);
+		}
+	}
 
 	public GUI()
 	{
-		//super(FRAME_TITLE);// title
+		super(FRAME_TITLE);// title
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		//setSize(screenSize);
-		frame.setPreferredSize(screenSize);
-		frame.setLayout(new BorderLayout());
+		setSize(screenSize);
 		
-		
-		//JPanel panel;
+		JPanel panel;
 		//draw background image.
-//		try
-//		{
-//			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
-//			getContentPane().add(panel);
-//		}
-//		catch (IOException e)
-//		{
-//			e.printStackTrace();
-//		}
+		try
+		{
+			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
+			getContentPane().add(panel);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		//add panel for uploading image
+		//JPanel panelForUploading = new GUIPanel();
+		//add(panelForUploading);
 	}
 
 	public static void main(String[] args)
