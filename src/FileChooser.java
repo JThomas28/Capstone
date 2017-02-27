@@ -37,11 +37,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.SwingUtilities;
 
-/*
- * FileChooserDemo.java uses these files:
- *   images/Open16.gif
- *   images/Save16.gif
- */
 @SuppressWarnings("serial")
 public class FileChooser extends JPanel
                              implements ActionListener {
@@ -49,6 +44,7 @@ public class FileChooser extends JPanel
     JButton openButton, saveButton;
     JTextArea log;
     JFileChooser fc;
+    private static File chosenFile;
 
     public FileChooser() {
         super(new BorderLayout());
@@ -103,6 +99,7 @@ public class FileChooser extends JPanel
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
+                chosenFile = file;
                 //This is where a real application would open the file.
                 log.append("Opening: " + file.getName() + "." + newline);
             } else {
@@ -151,6 +148,11 @@ public class FileChooser extends JPanel
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+    }
+    
+    public File getFile()
+    {
+    	return this.chosenFile;
     }
 
     public static void main(String[] args) {

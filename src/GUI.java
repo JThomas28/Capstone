@@ -52,6 +52,7 @@ public class GUI extends JFrame implements Constants
 				public void actionPerformed(ActionEvent e)
 				{
 					FileChooser.main(null);
+					pathToImage.setText(FileChooser.getFile().getAbsolutePath());
 					 //open file explorer
 //					 try
 //					 {
