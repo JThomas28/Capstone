@@ -102,35 +102,35 @@ public class FileChooser extends JPanel
         log.setCaretPosition(log.getDocument().getLength());
     }
 
-    public void actionPerformed(ActionEvent e) {
-
-        //Handle open button action.
-        if (e.getSource() == openButton) {
-            int returnVal = fc.showOpenDialog(FileChooser.this);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                chosenFile = file;
-                //This is where a real application would open the file.
-                log.append("Opening: " + file.getName() + "." + newline);
-            } else {
-                log.append("Open command cancelled by user." + newline);
-            }
-            log.setCaretPosition(log.getDocument().getLength());
-
-        //Handle save button action.
-        } else if (e.getSource() == saveButton) {
-            int returnVal = fc.showSaveDialog(FileChooser.this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                //This is where a real application would save the file.
-                log.append("Saving: " + file.getName() + "." + newline);
-            } else {
-                log.append("Save command cancelled by user." + newline);
-            }
-            log.setCaretPosition(log.getDocument().getLength());
-        }
-    }
+//    public void actionPerformed(ActionEvent e) {
+//
+//        //Handle open button action.
+//        if (e.getSource() == openButton) {
+//            int returnVal = fc.showOpenDialog(FileChooser.this);
+//
+//            if (returnVal == JFileChooser.APPROVE_OPTION) {
+//                File file = fc.getSelectedFile();
+//                chosenFile = file;
+//                //This is where a real application would open the file.
+//                log.append("Opening: " + file.getName() + "." + newline);
+//            } else {
+//                log.append("Open command cancelled by user." + newline);
+//            }
+//            log.setCaretPosition(log.getDocument().getLength());
+//
+//        //Handle save button action.
+//        } else if (e.getSource() == saveButton) {
+//            int returnVal = fc.showSaveDialog(FileChooser.this);
+//            if (returnVal == JFileChooser.APPROVE_OPTION) {
+//                File file = fc.getSelectedFile();
+//                //This is where a real application would save the file.
+//                log.append("Saving: " + file.getName() + "." + newline);
+//            } else {
+//                log.append("Save command cancelled by user." + newline);
+//            }
+//            log.setCaretPosition(log.getDocument().getLength());
+//        }
+//    }
 
     /** Returns an ImageIcon, or null if the path was invalid. */
     protected static ImageIcon createImageIcon(String path) {
