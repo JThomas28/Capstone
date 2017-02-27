@@ -67,7 +67,7 @@ public class FileChooser extends JPanel
         //then the default mode (FILES_ONLY) will be used.
         //
         //fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        //fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
         //Create the open button.  We use the image from the JLF
         //Graphics Repository (but we extracted it from the jar).
@@ -150,9 +150,9 @@ public class FileChooser extends JPanel
         frame.setVisible(true);
     }
     
-    public File getFile()
+    public static File getFile()
     {
-    	return this.chosenFile;
+    	return chosenFile;
     }
 
     public static void main(String[] args) {
