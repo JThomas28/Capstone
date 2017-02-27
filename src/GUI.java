@@ -59,6 +59,7 @@ public class GUI extends JFrame implements Constants
 					// }
 				}
 			});
+			add(chooseFileText);
 			add(uploadButton);
 			add(fileFormatsAllowed);
 			add(enterZipCode);
