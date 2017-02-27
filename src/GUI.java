@@ -34,14 +34,15 @@ public class GUI extends JFrame implements Constants
 			setPreferredSize(new Dimension(250, 250));
 			setBackground(Color.BLUE);
 
-			JLabel chooseFileText = new JLabel();
-			JButton uploadButton = new JButton();
+			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
+			JButton uploadButton = new JButton(BROWSE);
 			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
 			
 			JLabel enterZipCode = new JLabel(ZIPCODE_TEXT);
+			TextField zipcode = new TextField();
 
-			chooseFileText.setText(CHOOSE_IMAGE_TEXT);
-			uploadButton.setText(BROWSE);// CHOOSE_IMAGE_TEXT);
+			//chooseFileText.setText(CHOOSE_IMAGE_TEXT);
+			//uploadButton.setText(BROWSE);// CHOOSE_IMAGE_TEXT);
 			uploadButton.addActionListener(new ActionListener()
 			{
 				@Override
@@ -60,6 +61,8 @@ public class GUI extends JFrame implements Constants
 			});
 			add(uploadButton);
 			add(fileFormatsAllowed);
+			add(enterZipCode);
+			add(zipcode);
 
 			uploadButton.setVisible(true);
 		}
