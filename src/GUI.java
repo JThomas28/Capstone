@@ -31,7 +31,7 @@ public class GUI extends JFrame implements Constants
 		public GUIPanel()
 		{
 			setLayout(new FlowLayout());
-			setPreferredSize(new Dimension(250, 250));
+			setPreferredSize(new Dimension(300, 250));
 			setBackground(Color.BLUE);
 
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
