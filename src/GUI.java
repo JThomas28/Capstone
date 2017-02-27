@@ -79,7 +79,7 @@ public class GUI extends JFrame implements Constants
 			//add(fileFormatsAllowed);
 			add(enterZipCode);
 			add(zipcode);
-			//add(goButton);
+			add(goButton);
 		}
 	}
 	
