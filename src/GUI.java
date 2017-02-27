@@ -32,6 +32,7 @@ public class GUI extends JFrame implements Constants
 		{
 			setLayout(new FlowLayout());
 			setPreferredSize(new Dimension(100, 400));
+			setBackground(Color.BLUE);
 			
 			
 			
