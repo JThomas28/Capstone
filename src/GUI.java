@@ -37,6 +37,8 @@ public class GUI extends JFrame implements Constants
 			JLabel chooseFileText = new JLabel();
 			JButton uploadButton = new JButton();
 			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
+			
+			JLabel enterZipCode = new JLabel(ZIPCODE_TEXT);
 
 			chooseFileText.setText(CHOOSE_IMAGE_TEXT);
 			uploadButton.setText(BROWSE);// CHOOSE_IMAGE_TEXT);
