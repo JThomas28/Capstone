@@ -35,11 +35,12 @@ public class GUI extends JFrame implements Constants
 			setBackground(Color.BLUE);
 			
 			
-			
+			JLabel chooseFileText = new JLabel();
 			JButton uploadButton = new JButton();
 			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
 
-			uploadButton.setText(CHOOSE_IMAGE_TEXT);
+			chooseFileText.setText(CHOOSE_IMAGE_TEXT);
+			uploadButton.setText(BROWSE);//CHOOSE_IMAGE_TEXT);
 			uploadButton.addActionListener(new ActionListener()
 			{
 				@Override
