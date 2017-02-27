@@ -72,7 +72,7 @@ public class GUI extends JFrame implements Constants
 		setSize(screenSize);
 		
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 0,90));
+		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));//, 0,90));
 		
 		JPanel panel = new GUIPanel();
 		add(panel);
