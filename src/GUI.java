@@ -33,6 +33,10 @@ public class GUI extends JFrame implements Constants
 			setLayout(new FlowLayout());
 			setPreferredSize(new Dimension(250, 250));
 			setBackground(Color.BLUE);
+			
+			JPanel panel1 = new JPanel();
+			JPanel panel2 = new JPanel();
+			JPanel panel3 = new JPanel();
 
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
 			JButton uploadButton = new JButton(BROWSE);
@@ -62,14 +66,15 @@ public class GUI extends JFrame implements Constants
 //					 }
 				}
 			});
-			add(chooseFileText);
-			add(uploadButton);
-			add(pathTextFieldLabel);
-			add(pathToImage);
+			add(panel1);
+			panel1.add(chooseFileText);
+			panel1.add(uploadButton);
+			panel1.add(pathTextFieldLabel);
+			panel2.add(pathToImage);
 			//add(fileFormatsAllowed);
-			add(enterZipCode);
-			add(zipcode);
-			add(goButton);
+			panel2.add(enterZipCode);
+			panel2.add(zipcode);
+			panel3.add(goButton);
 		}
 	}
 
