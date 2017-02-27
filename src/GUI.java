@@ -31,7 +31,7 @@ public class GUI extends JFrame implements Constants
 		public GUIPanel()
 		{
 			setSize(400, 400);
-			setBackground(Color.white);
+			setBackground(Color.BLACK);
 			
 			JButton uploadButton = new JButton();
 			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
