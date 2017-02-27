@@ -50,15 +50,15 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					// open file explorer
-					// try
-					// {
-					// Desktop.getDesktop().open(imageFile);
-					// }
-					// catch (IOException e1)
-					// {
-					// e1.printStackTrace();
-					// }
+					 //open file explorer
+//					 try
+//					 {
+//					 Desktop.getDesktop().open(imageFile);
+//					 }
+//					 catch (IOException e1)
+//					 {
+//					 e1.printStackTrace();
+//					 }
 				}
 			});
 			add(chooseFileText);
