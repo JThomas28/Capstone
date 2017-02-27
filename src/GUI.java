@@ -14,6 +14,8 @@ public class GUI extends JFrame implements Constants
 {
 	private class GUIPanel extends JPanel
 	{
+		private final JFileChooser fileChooser = new JFileChooser();
+		//fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		private Image image;
 		
 		//getImageFilePath
@@ -30,8 +32,8 @@ public class GUI extends JFrame implements Constants
 		
 		public GUIPanel()
 		{
-			setSize(400, 400);
-			setBackground(Color.white);
+			//setSize(400, 400);
+			//setBackground(Color.white);
 			
 			JButton uploadButton = new JButton();
 			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
@@ -73,7 +75,7 @@ public class GUI extends JFrame implements Constants
 		//draw background image.
 		try
 		{
-			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
+			panel = new GUIPanel(BACKGROUND_IMAGE_NAME);
 			getContentPane().add(panel);
 		}
 		catch (IOException e)
