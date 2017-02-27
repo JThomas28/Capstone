@@ -51,6 +51,7 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
+					FileChooser.main(null);
 					 //open file explorer
 //					 try
 //					 {
