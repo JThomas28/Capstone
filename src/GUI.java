@@ -60,6 +60,7 @@ public class GUI extends JFrame implements Constants
 			add(fileFormatsAllowed);
 
 			uploadButton.setVisible(true);
+			pack();
 		}
 	}
 
