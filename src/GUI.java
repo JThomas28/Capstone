@@ -83,6 +83,9 @@ public class GUI extends JFrame implements Constants
 		{
 			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
 			getContentPane().add(panel);
+
+			JPanel panel_1 = new JPanel();
+			getContentPane().add(panel_1, BorderLayout.CENTER);
 		}
 		catch (IOException e)
 		{
