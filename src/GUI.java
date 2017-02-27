@@ -75,21 +75,20 @@ public class GUI extends JFrame implements Constants
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 0,90));
 		
-		JPanel panel2 = new GUIPanel();
-		//add(panel2);
+		JPanel panel = new GUIPanel();
+		add(panel);
 		
-		JPanel panel;
-		//draw background image.
-		try
-		{
-			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
-			getContentPane().add(panel);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		add(panel2);
+//		JPanel panel;
+//		//draw background image.
+//		try
+//		{
+//			panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
+//			getContentPane().add(panel);
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 
 	public static void main(String[] args)
