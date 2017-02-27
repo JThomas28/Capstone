@@ -71,9 +71,9 @@ public class FileChooser extends JPanel
 
         //Create the open button.  We use the image from the JLF
         //Graphics Repository (but we extracted it from the jar).
-        openButton = new JButton("Open a File...");//,
-                                 //createImageIcon("images/Open16.gif"));
-        openButton.addActionListener(this);
+//        openButton = new JButton("Open a File...");//,
+//                                 //createImageIcon("images/Open16.gif"));
+//        openButton.addActionListener(this);
 
         //Create the save button.  We use the image from the JLF
         //Graphics Repository (but we extracted it from the jar).
@@ -82,12 +82,12 @@ public class FileChooser extends JPanel
 //        saveButton.addActionListener(this);
 
         //For layout purposes, put the buttons in a separate panel
-        JPanel buttonPanel = new JPanel(); //use FlowLayout
-        buttonPanel.add(openButton);
+//        JPanel buttonPanel = new JPanel(); //use FlowLayout
+//        buttonPanel.add(openButton);
         //buttonPanel.add(saveButton);
 
         //Add the buttons and the log to this panel.
-        add(buttonPanel, BorderLayout.PAGE_START);
+        //add(buttonPanel, BorderLayout.PAGE_START);
         add(logScrollPane, BorderLayout.CENTER);
     }
 
