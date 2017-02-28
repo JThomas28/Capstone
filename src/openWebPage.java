@@ -7,8 +7,6 @@ public class openWebPage
 {
 	public static void main(String [] args) throws IOException
 	{
-		URL url = new URL("https://www.wunderground.com/history/");
-		//URL urlConnect = url.openConnection();
 		JEditorPane webpage = new JEditorPane(url);//"https://www.wunderground.com/history/");
 		
 		JFrame webpageFrame = new JFrame("Weather History");
