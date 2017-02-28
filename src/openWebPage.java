@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.*;
 
@@ -6,7 +7,9 @@ public class openWebPage
 {
 	public static void main(String [] args) throws IOException
 	{
-		JEditorPane webpage = new JEditorPane("https://www.wunderground.com/history/");
+		URL url = new URL("https://www.wunderground.com/history/");
+		//URL urlConnect = url.openConnection();
+		JEditorPane webpage = new JEditorPane(url);//"https://www.wunderground.com/history/");
 		
 		JFrame webpageFrame = new JFrame("Weather History");
 		webpageFrame.add(new JScrollPane(webpage));
