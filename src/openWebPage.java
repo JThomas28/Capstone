@@ -13,6 +13,5 @@ public class openWebPage
 		
 		webpageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		webpageFrame.setVisible(true);
-		webpageFrame.pack();
 	}
 }
