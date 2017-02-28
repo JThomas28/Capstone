@@ -70,7 +70,15 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					secondGUI();
+					//secondGUI();
+					try
+					{
+						openWebPage.main(null);
+					}
+					catch (IOException e1)
+					{
+						e1.printStackTrace();
+					}
 				}
 				
 			});
