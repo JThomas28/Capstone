@@ -32,7 +32,7 @@ public class GUI extends JFrame implements Constants
 		{
 			setLayout(new GridLayout(7, 1));//new FlowLayout());
 			//setPreferredSize(new Dimension(250, 300));
-			setBackground(Color.BLUE);
+			//setBackground(Color.BLUE);
 			
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
 			JButton uploadButton = new JButton(BROWSE);
