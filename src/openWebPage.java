@@ -10,6 +10,7 @@ public class openWebPage
 		
 		JFrame webpageFrame = new JFrame("Weather History");
 		webpageFrame.add(new JScrollPane(webpage));
+		webpage.setEditable(false);
 		
 		webpageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		webpageFrame.setVisible(true);
