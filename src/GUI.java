@@ -30,8 +30,7 @@ public class GUI extends JFrame implements Constants
 
 		public GUIPanel()
 		{
-			setLayout(new GridLayout(7, 1));//new FlowLayout());
-			//setPreferredSize(new Dimension(250, 300));
+			setLayout(new GridLayout(7, 1));
 			//setBackground(Color.BLUE);
 			
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
@@ -53,15 +52,6 @@ public class GUI extends JFrame implements Constants
 				{
 					FileChooser.main(null);
 					pathToImage.setText(FileChooser.getFile().getAbsolutePath());
-					 //open file explorer
-//					 try
-//					 {
-//					 Desktop.getDesktop().open(imageFile);
-//					 }
-//					 catch (IOException e1)
-//					 {
-//					 e1.printStackTrace();
-//					 }
 				}
 			});
 			
@@ -109,20 +99,20 @@ public class GUI extends JFrame implements Constants
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 90));
 
-		JPanel panel = new GUIPanel();
-		getContentPane().add(panel);
+//		JPanel panel = new GUIPanel();
+//		getContentPane().add(panel);
 
-		// JPanel panel;
-		// draw background image.
-		// try
-		// {
-		// panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
-		// getContentPane().add(panel);
-		// }
-		// catch (IOException e)
-		// {
-		// e.printStackTrace();
-		// }
+		 JPanel panel;
+		 draw background image.
+		 try
+		 {
+		 panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
+		 getContentPane().add(panel);
+		 }
+		 catch (IOException e)
+		 {
+		 e.printStackTrace();
+		 }
 	}
 
 	public static void main(String[] args)
