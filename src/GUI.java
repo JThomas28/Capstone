@@ -15,6 +15,7 @@ public class GUI extends JFrame implements Constants
 	private class GUIPanel extends JPanel
 	{
 		private Image image;
+		private String pathToImg;
 
 		@Override
 		public void paintComponent(Graphics g)
@@ -46,6 +47,7 @@ public class GUI extends JFrame implements Constants
 					FileChooser.main(null);
 					pathToImage.setText(FileChooser.getFile().getAbsolutePath());
 					pathToImage.setEditable(false); //can't change file path
+					
 				}
 			});
 			
@@ -54,6 +56,12 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
+					if(pathToImage.getText() == null)
+					{
+						JOptionPane.showMessageDialog(null, "No Image Selected");
+					}
+					else
+						secondGUI(pathToImage.getText());
 //					try
 //					{
 //						openWebPage.main(null);
@@ -72,25 +80,25 @@ public class GUI extends JFrame implements Constants
 			//add(fileFormatsAllowed);
 			add(enterZipCode);
 			add(zipcode);
-			//add(goButton);
+			add(goButton);
+		}
+		
+		public void secondGUI(String picture)
+		{
+			setLayout(new GridLayout(1, 2));//one section for picture, one for data found
+			
+			add(new JLabel(new ImageIcon(picture)));
+			
+			add(new JLabel("Estimated age: "));
+			add(new JButton("Click Here for More Info"));
 		}
 	}
 	
-	public void secondGUI(String picture)
-	{
-		//getContentPane().removeAll();
-		
-		setLayout(new GridLayout(1, 2));//one section for picture, one for data found
-		
-		add(new JLabel(new ImageIcon(picture)));
-		
-		add(new JLabel("Estimated age: "));
-		add(new JButton("Click Here for More Info"));
-	}
+	
 
 	public GUI()
 	{
-		super(FRAME_TITLE);// title
+		super(FRAME_TITLE);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -100,7 +108,7 @@ public class GUI extends JFrame implements Constants
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		JPanel panel = new GUIPanel();
-		getContentPane().add(panel);
+		contentPane.add(panel);
 		
 		JButton goButton = new JButton("Go");
 		goButton.addActionListener(new ActionListener()
@@ -108,12 +116,11 @@ public class GUI extends JFrame implements Constants
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//panel.removeAll();
-				removeAll();
-				
+				panel.setVisible(false);
+				//removeAll();
 			}
 		});
-		getContentPane().add(goButton);
+		add(goButton);
 
 //		 JPanel panel;
 //		 //draw background image.
