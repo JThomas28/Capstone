@@ -59,7 +59,7 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					secondGUI(FileChooser.getFile());//FileChooser.getFile());
+					secondGUI(pathToImage);
 //					try
 //					{
 //						openWebPage.main(null);
@@ -82,11 +82,11 @@ public class GUI extends JFrame implements Constants
 		}
 	}
 	
-	public void secondGUI(File picture)
+	public void secondGUI(String picture)
 	{
 		setLayout(new GridLayout(1, 2));//one section for picture, one for data found
 		
-		add(new JLabel(new ImageIcon(picture.getAbsolutePath())));
+		add(new JLabel(new ImageIcon(picture)));
 		
 		add(new JLabel("Estimated age: "));
 		add(new JButton("Click Here for More Info"));
