@@ -86,7 +86,9 @@ public class GUI extends JFrame implements Constants
 	
 	public void secondGUI()
 	{
-		//JPanel secondPanel = new JPanel()
+		setLayout(new GridLayout(1, 2));//one section for picture, one for data found
+		
+		
 	}
 
 	public GUI()
