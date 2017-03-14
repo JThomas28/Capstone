@@ -16,12 +16,7 @@ public class GUI extends JFrame implements Constants
 	{
 		private Image image;
 
-		// getImageFilePath
-//		public GUIPanel(String imgString) throws IOException
-//		{
-//			image = ImageIO.read(new File(imgString));
-//		}
-
+		@Override
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
