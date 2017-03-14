@@ -59,15 +59,15 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					//secondGUI();
-					try
-					{
-						openWebPage.main(null);
-					}
-					catch (IOException e1)
-					{
-						e1.printStackTrace();
-					}
+					secondGUI(FileChooser.getFile());//FileChooser.getFile());
+//					try
+//					{
+//						openWebPage.main(null);
+//					}
+//					catch (IOException e1)
+//					{
+//						e1.printStackTrace();
+//					}
 				}
 				
 			});
@@ -82,11 +82,14 @@ public class GUI extends JFrame implements Constants
 		}
 	}
 	
-	public void secondGUI()
+	public void secondGUI(File picture)
 	{
 		setLayout(new GridLayout(1, 2));//one section for picture, one for data found
 		
+		add(new JLabel(new ImageIcon(picture.getAbsolutePath())));
 		
+		add(new JLabel("Estimated age: "));
+		add(new JButton("Click Here for More Info"));
 	}
 
 	public GUI()
