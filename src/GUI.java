@@ -56,20 +56,16 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					if(pathToImage.getText() == null)
+					//TODO make sure user selects an image
+						//secondGUI(pathToImage.getText());
+					try
 					{
-						JOptionPane.showMessageDialog(null, "No Image Selected");
+						openWebPage.main(null);
 					}
-					else
-						secondGUI(pathToImage.getText());
-//					try
-//					{
-//						openWebPage.main(null);
-//					}
-//					catch (IOException e1)
-//					{
-//						e1.printStackTrace();
-//					}
+					catch (IOException e1)
+					{
+						e1.printStackTrace();
+					}
 				}
 				
 			});
