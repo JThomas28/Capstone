@@ -54,7 +54,6 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					secondGUI(pathToImage.getText());
 //					try
 //					{
 //						openWebPage.main(null);
@@ -73,12 +72,14 @@ public class GUI extends JFrame implements Constants
 			//add(fileFormatsAllowed);
 			add(enterZipCode);
 			add(zipcode);
-			add(goButton);
+			//add(goButton);
 		}
 	}
 	
 	public void secondGUI(String picture)
 	{
+		//getContentPane().removeAll();
+		
 		setLayout(new GridLayout(1, 2));//one section for picture, one for data found
 		
 		add(new JLabel(new ImageIcon(picture)));
@@ -96,10 +97,23 @@ public class GUI extends JFrame implements Constants
 		setSize(screenSize);
 
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 90));
+		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		JPanel panel = new GUIPanel();
 		getContentPane().add(panel);
+		
+		JButton goButton = new JButton("Go");
+		goButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//panel.removeAll();
+				removeAll();
+				
+			}
+		});
+		getContentPane().add(goButton);
 
 //		 JPanel panel;
 //		 //draw background image.
