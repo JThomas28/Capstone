@@ -109,18 +109,6 @@ public class GUI extends JFrame implements Constants
 
 		JPanel panel = new GUIPanel();
 		contentPane.add(panel);
-		
-		JButton goButton = new JButton("Go");
-		goButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				panel.setVisible(false);
-				//removeAll();
-			}
-		});
-		add(goButton);
 
 //		 JPanel panel;
 //		 //draw background image.
