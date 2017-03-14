@@ -59,7 +59,7 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					secondGUI(pathToImage);
+					secondGUI(pathToImage.getText());
 //					try
 //					{
 //						openWebPage.main(null);
