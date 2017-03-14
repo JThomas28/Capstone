@@ -17,10 +17,10 @@ public class GUI extends JFrame implements Constants
 		private Image image;
 
 		// getImageFilePath
-		public GUIPanel(String imgString) throws IOException
-		{
-			image = ImageIO.read(new File(imgString));
-		}
+//		public GUIPanel(String imgString) throws IOException
+//		{
+//			image = ImageIO.read(new File(imgString));
+//		}
 
 		public void paintComponent(Graphics g)
 		{
@@ -52,6 +52,7 @@ public class GUI extends JFrame implements Constants
 				{
 					FileChooser.main(null);
 					pathToImage.setText(FileChooser.getFile().getAbsolutePath());
+					pathToImage.setEditable(false); //can't change file path
 				}
 			});
 			
@@ -85,7 +86,7 @@ public class GUI extends JFrame implements Constants
 	
 	public void secondGUI()
 	{
-		
+		//JPanel secondPanel = new JPanel()
 	}
 
 	public GUI()
