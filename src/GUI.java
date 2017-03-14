@@ -43,8 +43,6 @@ public class GUI extends JFrame implements Constants
 			JLabel enterZipCode = new JLabel(ZIPCODE_TEXT);
 			JTextField zipcode = new JTextField(5);
 
-			//chooseFileText.setText(CHOOSE_IMAGE_TEXT);
-			//uploadButton.setText(BROWSE);// CHOOSE_IMAGE_TEXT);
 			uploadButton.addActionListener(new ActionListener()
 			{
 				@Override
