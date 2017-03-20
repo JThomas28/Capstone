@@ -15,7 +15,6 @@ public class GUI extends JFrame implements Constants
 	private class GUIPanel extends JPanel
 	{
 		private Image image;
-		private String pathToImg;
 
 		@Override
 		public void paintComponent(Graphics g)
@@ -27,7 +26,6 @@ public class GUI extends JFrame implements Constants
 		public GUIPanel()
 		{
 			setLayout(new GridLayout(7, 1));
-			//setBackground(Color.BLUE);
 			
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
 			JButton uploadButton = new JButton(BROWSE);
@@ -57,15 +55,7 @@ public class GUI extends JFrame implements Constants
 				public void actionPerformed(ActionEvent e)
 				{
 					//TODO make sure user selects an image
-						//secondGUI(pathToImage.getText());
-					try
-					{
-						openWebPage.main(null);
-					}
-					catch (IOException e1)
-					{
-						e1.printStackTrace();
-					}
+					secondGUI(pathToImage.getText());
 				}
 				
 			});
@@ -81,17 +71,63 @@ public class GUI extends JFrame implements Constants
 		
 		public void secondGUI(String picture)
 		{
-			setLayout(new GridLayout(1, 2));//one section for picture, one for data found
+			removeAll();
+			
+			getContentPane().setLayout(new FlowLayout());
+			
+			JPanel panel = new JPanel();
+			panel.setBackground(Color.GRAY);
+			
+			JPanel panel2 = new JPanel();
+			
+			panel.setLayout(new GridLayout(5, 1));
+			panel2.setLayout(new FlowLayout());
 			
 			add(new JLabel(new ImageIcon(picture)));
 			
-			add(new JLabel("Estimated age: "));
-			add(new JButton("Click Here for More Info"));
+			panel.add(new JLabel("Estimated age: "));
+			panel.add(new JLabel("Greater than normal growth years: "));
+			panel.add(new JLabel("Less than normal growth years: "));
+			JButton moreInfo = new JButton("Click Here for More Info");
+			panel.add(moreInfo);
+			
+			JButton addAnother = new JButton("Click Here To Add Another Image To Analyze");
+			panel2.add(addAnother);
+			
+			moreInfo.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					try
+					{
+						openWebPage.main(null);
+					}
+					catch (IOException e1)
+					{
+						e1.printStackTrace();
+					}
+				}
+			});
+			
+			addAnother.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					//TODO allow user to add another image to analyze
+				}
+				
+			});
+			
+			add(panel);
+			add(panel2);
+			revalidate();
+			repaint();	
 		}
 	}
 	
 	
-
 	public GUI()
 	{
 		super(FRAME_TITLE);
@@ -103,15 +139,16 @@ public class GUI extends JFrame implements Constants
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		JPanel panel = new GUIPanel();
-		contentPane.add(panel);
-
-//		 JPanel panel;
-//		 //draw background image.
+		//TODO add background image
+		
+		 JPanel panel = new GUIPanel();
+		 contentPane.add(panel);
+		 
+		 //draw background image.
 //		 try
 //		 {
-//		 panel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
-//		 getContentPane().add(panel);
+//		 imagePanel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
+//		 contentPane().add(panel);
 //		 }
 //		 catch (IOException e)
 //		 {
