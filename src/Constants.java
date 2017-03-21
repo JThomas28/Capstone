@@ -9,4 +9,5 @@ public interface Constants
 	public static final String PATH_TEXTFIELD = "Path To Image:";
 	public static final String GO = "Go";
 	public static final String MORE_INFO = "More Info";
+	public static final String NOT_VALID_FILE = "Please choose a valid '*.jpg' or '*.png' image file";
 }

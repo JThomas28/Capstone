@@ -1,12 +1,7 @@
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
@@ -14,29 +9,58 @@ public class GUI extends JFrame implements Constants
 {
 	private class GUIPanel extends JPanel
 	{
-		private Image image;
-
-		@Override
-		public void paintComponent(Graphics g)
-		{
-			super.paintComponent(g);
-			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-		}
-
+		//Backround fields
+		JPanel panelHoldingBackgroundImage = new JPanel();
+		JLabel backgroundImageLabel = new JLabel();
+		
+		//component fields
+		JPanel panelHoldingComponentPanel = new JPanel();
+		JPanel componentPanel = new JPanel();
 		public GUIPanel()
 		{
-			setLayout(new GridLayout(7, 1));
-			
+			JPanel masterPanel = new JPanel();
+			setLayout(new BorderLayout());
+			panelHoldingBackgroundImage.setLayout(new BorderLayout());
+			backgroundImageLabel.setLayout(new BorderLayout());
+
+			try
+			{
+				// set background image
+				backgroundImageLabel.setIcon(new ImageIcon("forestBackground.jpg"));
+			}
+			catch (Exception e)
+			{
+				// catch exception where image isn't found
+				e.printStackTrace();
+			}
+			// add image to panel
+			panelHoldingBackgroundImage.add(backgroundImageLabel);
+
+			masterPanel.add(panelHoldingBackgroundImage);
+
+			panelHoldingComponentPanel.setLayout(new GridBagLayout());
+			panelHoldingComponentPanel.setOpaque(false);
+
+			//componentPanel.setBackground(Color.WHITE);
+			componentPanel.setLayout(new GridLayout(8, 1));
+			componentPanel.setOpaque(true);
+
+			panelHoldingComponentPanel.add(componentPanel);
+			backgroundImageLabel.add(panelHoldingComponentPanel);
+
+			// components
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
 			JButton uploadButton = new JButton(BROWSE);
 			JButton goButton = new JButton(GO);
 			//JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
 			JTextField pathToImage = new JTextField(15);
 			JLabel pathTextFieldLabel = new JLabel(PATH_TEXTFIELD);
-			
 			JLabel enterZipCode = new JLabel(ZIPCODE_TEXT);
+			enterZipCode.setHorizontalAlignment(getWidth()/2);
 			JTextField zipcode = new JTextField(5);
+			
 
+			//fileupload button listener
 			uploadButton.addActionListener(new ActionListener()
 			{
 				@Override
@@ -44,56 +68,59 @@ public class GUI extends JFrame implements Constants
 				{
 					FileChooser.main(null);
 					pathToImage.setText(FileChooser.getFile().getAbsolutePath());
-					pathToImage.setEditable(false); //can't change file path
-					
+					pathToImage.setEditable(false); // can't change file path
 				}
 			});
-			
+
+			//begin analysis
 			goButton.addActionListener(new ActionListener()
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					//TODO make sure user selects an image
-					secondGUI(pathToImage.getText());
+					if(pathToImage.getText().endsWith(".jpg") || 
+							pathToImage.getText().endsWith(".png"))//valid image
+						secondGUI(pathToImage.getText());
+					else
+						JOptionPane.showMessageDialog(getContentPane(),NOT_VALID_FILE);
 				}
-				
 			});
-			add(chooseFileText);
-			add(uploadButton);
-			add(pathTextFieldLabel);
-			add(pathToImage);
-			//add(fileFormatsAllowed);
-			add(enterZipCode);
-			add(zipcode);
-			add(goButton);
+			
+			//add components to panel
+			componentPanel.add(chooseFileText);
+			componentPanel.add(uploadButton);
+			componentPanel.add(pathTextFieldLabel);
+			componentPanel.add(pathToImage);
+			//componentPanel.add(fileFormatsAllowed);
+			componentPanel.add(enterZipCode);
+			componentPanel.add(zipcode);
+			componentPanel.add(goButton);
+			add(masterPanel);
 		}
-		
+
 		public void secondGUI(String picture)
 		{
+			//TODO add background image to second GUI
 			removeAll();
-			
-			getContentPane().setLayout(new FlowLayout());
-			
+			setLayout(new GridLayout(2,1));
+
 			JPanel panel = new JPanel();
-			panel.setBackground(Color.GRAY);
-			
 			JPanel panel2 = new JPanel();
-			
+
 			panel.setLayout(new GridLayout(5, 1));
 			panel2.setLayout(new FlowLayout());
 			
 			add(new JLabel(new ImageIcon(picture)));
-			
-			panel.add(new JLabel("Estimated age: "));
-			panel.add(new JLabel("Greater than normal growth years: "));
-			panel.add(new JLabel("Less than normal growth years: "));
-			JButton moreInfo = new JButton("Click Here for More Info");
+
+			panel.add(new JLabel("Estimated age: 155 years"));
+			panel.add(new JLabel("Above Average growth years: 1996, 1998"));
+			panel.add(new JLabel("Below Average growth years: 2002"));
+			JButton moreInfo = new JButton("More Info");
 			panel.add(moreInfo);
-			
+
 			JButton addAnother = new JButton("Click Here To Add Another Image To Analyze");
 			panel2.add(addAnother);
-			
+
 			moreInfo.addActionListener(new ActionListener()
 			{
 				@Override
@@ -109,25 +136,26 @@ public class GUI extends JFrame implements Constants
 					}
 				}
 			});
-			
+
 			addAnother.addActionListener(new ActionListener()
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					//TODO allow user to add another image to analyze
+					// TODO allow user to add another image to analyze
+					//new GUI();
 				}
-				
 			});
-			
+
 			add(panel);
-			add(panel2);
+			panel.add(panel2);
+			//p.add(panel);
+			//add(p);
 			revalidate();
-			repaint();	
+			repaint();
 		}
 	}
-	
-	
+
 	public GUI()
 	{
 		super(FRAME_TITLE);
@@ -139,21 +167,8 @@ public class GUI extends JFrame implements Constants
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		//TODO add background image
-		
-		 JPanel panel = new GUIPanel();
-		 contentPane.add(panel);
-		 
-		 //draw background image.
-//		 try
-//		 {
-//		 imagePanel = new GUIPanel(PATH_TO_BACKGROUND_IMAGE);
-//		 contentPane().add(panel);
-//		 }
-//		 catch (IOException e)
-//		 {
-//		 e.printStackTrace();
-//		 }
+		JPanel panel = new GUIPanel();
+		contentPane.add(panel);
 	}
 
 	public static void main(String[] args)
