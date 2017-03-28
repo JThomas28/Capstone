@@ -1,3 +1,4 @@
+package UIStuff;
 public interface Constants
 {
 	public static final String FRAME_TITLE = "Ring Counter"; 

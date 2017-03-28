@@ -1,3 +1,4 @@
+package UIStuff;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,9 +41,8 @@ public class GUI extends JFrame implements Constants
 
 			panelHoldingComponentPanel.setLayout(new GridBagLayout());
 			panelHoldingComponentPanel.setOpaque(false);
-
-			//componentPanel.setBackground(Color.WHITE);
-			componentPanel.setLayout(new GridLayout(8, 1));
+			
+			componentPanel.setLayout(new GridLayout(7, 1));
 			componentPanel.setOpaque(true);
 
 			panelHoldingComponentPanel.add(componentPanel);
@@ -56,7 +56,6 @@ public class GUI extends JFrame implements Constants
 			JTextField pathToImage = new JTextField(15);
 			JLabel pathTextFieldLabel = new JLabel(PATH_TEXTFIELD);
 			JLabel enterZipCode = new JLabel(ZIPCODE_TEXT);
-			enterZipCode.setHorizontalAlignment(getWidth()/2);
 			JTextField zipcode = new JTextField(5);
 			
 
