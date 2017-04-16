@@ -20,6 +20,8 @@ import analysisStuff.FindRings;
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements Constants
 {
+	GUIPanel uploadPanel;
+
 	private class GUIPanel extends JPanel
 	{
 		private int numClicks = 0;
@@ -107,7 +109,6 @@ public class GUI extends JFrame implements Constants
 							ImageFilter filter = new GrayFilter(true, 50);
 							ImageProducer producer = new FilteredImageSource(myBuffImage.getSource(), filter);
 							myImage = Toolkit.getDefaultToolkit().createImage(producer);
-
 						}
 						catch (Exception exception)
 						{
@@ -126,7 +127,7 @@ public class GUI extends JFrame implements Constants
 
 			// add components to panel
 			// TODO erase this line. Just using it to make testing easier
-			pathToImage.setText("/Users/JonathanThomas/Desktop/Trees/treePic.jpg");
+			pathToImage.setText("/Users/JonathanThomas/Desktop/Trees/dense_rings.jpg");
 
 			componentPanel.add(chooseFileText);
 			componentPanel.add(uploadButton);
@@ -191,6 +192,7 @@ public class GUI extends JFrame implements Constants
 					catch (ArrayIndexOutOfBoundsException exc)
 					{
 						JOptionPane.showMessageDialog(getContentPane(), "Must choose point on image");
+						numClicks = 2;
 					}
 				}
 			});
@@ -202,34 +204,80 @@ public class GUI extends JFrame implements Constants
 
 		}
 
+		private boolean[] getEdgesToMeasureTo()
+		{
+			boolean[] myBools = new boolean[4];
+			String select = "Select which edges to measure to";
+			JCheckBox right = new JCheckBox("Right");
+			JCheckBox left = new JCheckBox("Left");
+			JCheckBox up = new JCheckBox("Up");
+			JCheckBox down = new JCheckBox("Down");
+			JCheckBox myBoxes[] = { right, left, up, down };
+			Object[] params = { select, right, left, up, down };
+
+			JOptionPane.showMessageDialog(null, params, "Choose Edges", JOptionPane.PLAIN_MESSAGE);
+			for (int i = 0; i < 4; i++)
+				myBools[i] = myBoxes[i].isSelected();
+
+			boolean somethingSelected = false;
+			for (int i = 0; i < myBools.length; i++)
+			{
+				if (myBools[i])
+					somethingSelected = true;
+			}
+
+			if (somethingSelected)
+				return myBools;
+			else
+				return getEdgesToMeasureTo();
+		}
+
 		private void setPoint(int clickNum, int x, int y, int colorValue)
 		{
 			// TODO create a new findRings object using this data
 
-			int threshold;
+			// int threshold;
 			switch (clickNum)
 			{
 				case 1:
 					// this point is the center
 					centerPoint = new Point(x, y);
-					JOptionPane.showMessageDialog(getContentPane(), "Great! Now choose the edge to measure to");
-					break;
-				case 2:
-					// this is the edge point
+					boolean edges[] = getEdgesToMeasureTo();
+					for (boolean b : edges)
+						System.out.println(b);
+					// numClicks++;
+					// JOptionPane.showMessageDialog(getContentPane(), "Great!
+					// Now choose the edge to measure to");
 					edge = new Point(x, y);
 					JOptionPane.showMessageDialog(getContentPane(),
-							"Almost done! Now choose a point between the rings. "
+							"Almost done! Now choose a point between the rings.\n"
 									+ "This will be used as a threshold, to detect the darker color of the rings.");
 					break;
-				case 3:
-					// this is the threshold. Don't care where it is, just the
-					// colorValue
-					threshold = colorValue;
-					FindRings myRings = new FindRings(toBufferedImage(myImage), centerPoint, edge, threshold);
-					int age = myRings.returnAge();
+				case 2:
+					FindRings myRings = new FindRings(toBufferedImage(myImage), centerPoint, edge, colorValue);
+					int age = myRings.findAge();// returnAge();
 					System.out.println(age);
+					this.myImage = myRings.getColorizedImage();
 					resultGUI(age);
 					break;
+				// this is the edge point
+				// edge = new Point(x, y);
+				// JOptionPane.showMessageDialog(getContentPane(),
+				// "Almost done! Now choose a point between the rings.\n"
+				// + "This will be used as a threshold, to detect the darker
+				// color of the rings.");
+				// break;
+				// case 3:
+				// // this is the threshold. Don't care where it is, just the
+				// // colorValue
+				// // threshold = colorValue;
+				// FindRings myRings = new FindRings(toBufferedImage(myImage),
+				// centerPoint, edge, colorValue);
+				// int age = myRings.findAge();// returnAge();
+				// System.out.println(age);
+				// this.myImage = myRings.getColorizedImage();
+				// resultGUI(age);
+				// break;
 			}
 		}
 
@@ -313,7 +361,7 @@ public class GUI extends JFrame implements Constants
 				public void actionPerformed(ActionEvent e)
 				{
 					// TODO allow user to add another image to analyze
-					// new GUI();
+					// new GUIPanel();
 				}
 			});
 
@@ -337,8 +385,35 @@ public class GUI extends JFrame implements Constants
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		JPanel panel = new GUIPanel();
+		JMenuBar menuBar = new JMenuBar();
+		JMenu newUpload = new JMenu("New");
+		JMenuItem newUploadButton = new JMenuItem("New Upload");
+
+		newUpload.add(newUploadButton);
+		menuBar.add(newUpload);
+		setJMenuBar(menuBar);
+
+		GUIPanel panel = new GUIPanel();
+
+		newUploadButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				int result = JOptionPane.showConfirmDialog(GUI.this, "Analyze new image?", "Confirm",
+						JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION)
+				{
+					// start new game
+					contentPane.removeAll();
+
+					// contentPane.add(new GUIPanel());
+					contentPane.repaint();
+				}
+			}
+		});
 		contentPane.add(panel);
+
 	}
 
 	public static void main(String[] args)
