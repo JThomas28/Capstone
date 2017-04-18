@@ -15,9 +15,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import analysisStuff.FindRings;
+import analysisStuff.Detector;
 
-@SuppressWarnings("serial")
 public class GUI extends JFrame implements Constants
 {
 	GUIPanel uploadPanel;
@@ -27,7 +26,7 @@ public class GUI extends JFrame implements Constants
 		private int numClicks = 0;
 		private Image myImage;
 		private Point centerPoint = null;
-		private Point edge = null;
+		private boolean[] myEdges;
 
 		// Backround fields
 		JPanel panelHoldingBackgroundImage = new JPanel();
@@ -180,13 +179,21 @@ public class GUI extends JFrame implements Constants
 						int y = e.getY();
 						int threshold = 0;
 
-						if (numClicks == 3)
-							threshold = myBuffImg.getRGB(x, y);
+						if (numClicks == 1)
+						{
+							// center point
+							centerPoint = new Point(x, y);
+							myEdges = getEdgesToMeasureTo();
+							JOptionPane.showMessageDialog(getContentPane(),
+									"Almost done! Now choose a point between the rings.\n"
+											+ "This will be used as a threshold, to detect the darker color of the rings.");
+						}
 
-						setPoint(numClicks, x, y, threshold);
-						// toBufferedImage(myTree.getPicture()).setRGB(x, y,
-						// Color.RED.getRGB());
-						// repaint();
+						else
+						{
+							threshold = myBuffImg.getRGB(x, y);
+							setDetector(myBuffImg, centerPoint, myEdges, threshold);
+						}
 						System.out.println(x + ", " + y);
 					}
 					catch (ArrayIndexOutOfBoundsException exc)
@@ -202,6 +209,13 @@ public class GUI extends JFrame implements Constants
 			repaint();
 			JOptionPane.showMessageDialog(getContentPane(), "Click center of tree cookie");
 
+		}
+
+		private void setDetector(BufferedImage buffImg, Point start, boolean[] edges, Integer threshold)
+		{
+			Detector myDetector = new Detector(buffImg, start, edges, threshold);
+			this.myImage = myDetector.getColorizedImage();
+			resultGUI(myDetector.findAge());
 		}
 
 		private boolean[] getEdgesToMeasureTo()
@@ -230,55 +244,6 @@ public class GUI extends JFrame implements Constants
 				return myBools;
 			else
 				return getEdgesToMeasureTo();
-		}
-
-		private void setPoint(int clickNum, int x, int y, int colorValue)
-		{
-			// TODO create a new findRings object using this data
-
-			// int threshold;
-			switch (clickNum)
-			{
-				case 1:
-					// this point is the center
-					centerPoint = new Point(x, y);
-					boolean edges[] = getEdgesToMeasureTo();
-					for (boolean b : edges)
-						System.out.println(b);
-					// numClicks++;
-					// JOptionPane.showMessageDialog(getContentPane(), "Great!
-					// Now choose the edge to measure to");
-					edge = new Point(x, y);
-					JOptionPane.showMessageDialog(getContentPane(),
-							"Almost done! Now choose a point between the rings.\n"
-									+ "This will be used as a threshold, to detect the darker color of the rings.");
-					break;
-				case 2:
-					FindRings myRings = new FindRings(toBufferedImage(myImage), centerPoint, edge, colorValue);
-					int age = myRings.findAge();// returnAge();
-					System.out.println(age);
-					this.myImage = myRings.getColorizedImage();
-					resultGUI(age);
-					break;
-				// this is the edge point
-				// edge = new Point(x, y);
-				// JOptionPane.showMessageDialog(getContentPane(),
-				// "Almost done! Now choose a point between the rings.\n"
-				// + "This will be used as a threshold, to detect the darker
-				// color of the rings.");
-				// break;
-				// case 3:
-				// // this is the threshold. Don't care where it is, just the
-				// // colorValue
-				// // threshold = colorValue;
-				// FindRings myRings = new FindRings(toBufferedImage(myImage),
-				// centerPoint, edge, colorValue);
-				// int age = myRings.findAge();// returnAge();
-				// System.out.println(age);
-				// this.myImage = myRings.getColorizedImage();
-				// resultGUI(age);
-				// break;
-			}
 		}
 
 		private BufferedImage toBufferedImage(Image img)
@@ -324,7 +289,7 @@ public class GUI extends JFrame implements Constants
 			panel.setLayout(new GridLayout(5, 1));
 			panel2.setLayout(new FlowLayout());
 
-			add(new JLabel(new ImageIcon(myImage)));// myTree.getPicture());
+			add(new JLabel(new ImageIcon(myImage)));
 
 			// myTree.getPicture().getGraphics().add(new JLabel(new
 			// ImageIcon(myTree.getPicture())));
@@ -364,11 +329,8 @@ public class GUI extends JFrame implements Constants
 					// new GUIPanel();
 				}
 			});
-
 			add(panel);
 			panel.add(panel2);
-			// p.add(panel);
-			// add(p);
 			revalidate();
 			repaint();
 		}
@@ -413,7 +375,6 @@ public class GUI extends JFrame implements Constants
 			}
 		});
 		contentPane.add(panel);
-
 	}
 
 	public static void main(String[] args)

@@ -10,14 +10,14 @@ public class Detector
 {
 
 	private BufferedImage myImage;
-	private int myThreshold;
+	private Integer myThreshold;
 	Point startingPoint, endingPoint;
 	private ArrayList<Ring> rings;
 	private boolean right, left, up, down;
 
-	public Detector(BufferedImage myImage, Point startingPoint, boolean [] edges, int myThreshold)
-		{
-		//right, left, up, down
+	public Detector(BufferedImage myImage, Point startingPoint, boolean[] edges, Integer myThreshold)
+	{
+		// right, left, up, down
 		this.right = edges[0];
 		this.left = edges[1];
 		this.up = edges[2];
@@ -26,72 +26,142 @@ public class Detector
 		this.rings = new ArrayList<Ring>();
 		this.myThreshold = myThreshold;
 		this.startingPoint = startingPoint;
-		}
+	}
 
-	private void searchRight()
+	private int searchRight()
 	{
+		int ringCount = 0;
+		Point currentPixel = startingPoint;
+		do
+		{
+			currentPixel.setLocation(currentPixel.x + 1, currentPixel.y);
+			if (isRing(currentPixel, this.myThreshold))
+			{
+				ringCount++;
+				Point start = currentPixel;
+				while (isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x + 1, currentPixel.y))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.RED.getRGB());
+					currentPixel.setLocation(currentPixel.x + 1, currentPixel.y);
+				}
+				Point end = currentPixel;
+				Ring currentRing = new Ring(start.x, end.x, end.x - start.x);
+				this.rings.add(currentRing);
+			}
+			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
+		} while (currentPixel.x < 499);
 		
+		return ringCount;
 	}
-	private void searchLeft()
+
+	private int searchLeft()
 	{
+		int ringCount = 0;
+		Point currentPixel = startingPoint;
+		do
+		{
+			currentPixel.setLocation(currentPixel.x - 1, currentPixel.y);
+			if (isRing(currentPixel, this.myThreshold))
+			{
+				ringCount++;
+				Point start = currentPixel;
+				while (isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x - 1, currentPixel.y))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.RED.getRGB());
+					currentPixel.setLocation(currentPixel.x - 1, currentPixel.y);
+				}
+				Point end = currentPixel;
+				Ring currentRing = new Ring(start.x, end.x, end.x - start.x);
+				this.rings.add(currentRing);
+			}
+			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
+		} while (currentPixel.x > 0);
 		
+		return ringCount;
 	}
-	private void searchUp()
+
+	private int searchUp()
 	{
-		
+		int ringCount = 0;
+		Point currentPixel = startingPoint;
+		do
+		{
+			currentPixel.setLocation(currentPixel.x, currentPixel.y - 1);
+			if (isRing(currentPixel, this.myThreshold))
+			{
+				ringCount++;
+				Point start = currentPixel;
+				while (isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x, currentPixel.y - 1))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.RED.getRGB());
+					currentPixel.setLocation(currentPixel.x, currentPixel.y - 1);
+				}
+				Point end = currentPixel;
+				Ring currentRing = new Ring(start.x, end.x, end.x - start.x);
+				this.rings.add(currentRing);
+			}
+			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
+		} while (currentPixel.y > 0);
+		return ringCount;
 	}
-	private void searchDown()
+
+	private int searchDown()
 	{
-		
+		int ringCount = 0;
+		Point currentPixel = startingPoint;
+		do
+		{
+			currentPixel.setLocation(currentPixel.x, currentPixel.y + 1);
+			if (isRing(currentPixel, this.myThreshold))
+			{
+				ringCount++;
+				Point start = currentPixel;
+				while (isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x, currentPixel.y + 1))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.RED.getRGB());
+					currentPixel.setLocation(currentPixel.x, currentPixel.y + 1);
+				}
+				Point end = currentPixel;
+				Ring currentRing = new Ring(start.x, end.x, end.x - start.x);
+				this.rings.add(currentRing);
+			}
+			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
+		} while (currentPixel.y < 499);
+		return ringCount;
 	}
+
 	public int findAge()
 	{
-		if(this.right)
-			searchRight();
-		if(this.left)
-			searchLeft();
-		if(this.up)
-			searchUp();
-		if(this.down)
-			searchDown();
-		Point currentPixel = new Point(this.startingPoint.x, this.startingPoint.y);
-		int ringCount = 0;
-		if (startingPoint.x < endingPoint.x)
+		int sum = 0;
+		int numOfDirections = 0;
+		if (this.right)
 		{
-			// measuring left to right
-			if (startingPoint.y < endingPoint.y)
-			{
-				// moving down
-				while (currentPixel.x < endingPoint.x)
-				{
-					currentPixel.setLocation(currentPixel.x + 1, currentPixel.y);
-					if (isRing(currentPixel, this.myThreshold))
-					{
-						ringCount++;
-						Point start = currentPixel;
-						while (isRing(currentPixel, this.myThreshold) && // myImage.getRGB(currentPixel.x,
-																			// currentPixel.y)
-																			// -
-																			// 50000
-																			// <
-																			// this.myThreshold
-								inBounds(currentPixel.x, currentPixel.y))
-						{
-							// this.myImage.setRGB(currentPixel.x,
-							// currentPixel.y, 4, 4, colorRed, 0, 0);
-							this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.RED.getRGB());
-							currentPixel.setLocation(currentPixel.x + 1, currentPixel.y);
-						}
-						Point end = currentPixel;
-						Ring currentRing = new Ring(start.x, end.x, end.x - start.x);
-						this.rings.add(currentRing);
-					}
-					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
-				}
-			}
+			sum += searchRight();
+			numOfDirections++;
 		}
-		// zoomImage(startingPoint.x - 100, 400, 0, 500);
-		return ringCount;
+			
+		
+		if (this.left)
+		{
+			sum += searchLeft();
+			numOfDirections++;
+		}
+			
+		
+		if (this.up)
+		{
+			sum += searchUp();
+			numOfDirections++;
+		}
+			
+		
+		if (this.down)
+		{
+			sum += searchDown();
+			numOfDirections++;
+		}
+		
+		return sum / numOfDirections;
 	}
 
 	private int averageRingWidth()
@@ -131,7 +201,7 @@ public class Detector
 
 	private boolean inBounds(int x, int y)
 	{
-		if (x >= 0 && x <= 500 && y <= 500 && y >= 0)
+		if (x > 0 && x < 500 && y < 500 && y > 0)
 			return true;
 		else
 			return false;
