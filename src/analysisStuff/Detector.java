@@ -10,12 +10,12 @@ public class Detector
 {
 
 	private BufferedImage myImage;
-	private Integer myThreshold;
-	Point startingPoint, endingPoint;
+	private int myThreshold;
+	private Point startingPoint;
 	private ArrayList<Ring> rings;
 	private boolean right, left, up, down;
 
-	public Detector(BufferedImage myImage, Point startingPoint, boolean[] edges, Integer myThreshold)
+	public Detector(BufferedImage myImage, Point startingPoint, boolean[] edges, int myThreshold)
 	{
 		// right, left, up, down
 		this.right = edges[0];
@@ -34,7 +34,7 @@ public class Detector
 		Point currentPixel = startingPoint;
 		do
 		{
-			currentPixel.setLocation(currentPixel.x + 1, currentPixel.y);
+			currentPixel = new Point(currentPixel.x + 1, currentPixel.y);
 			if (isRing(currentPixel, this.myThreshold))
 			{
 				ringCount++;
@@ -60,7 +60,7 @@ public class Detector
 		Point currentPixel = startingPoint;
 		do
 		{
-			currentPixel.setLocation(currentPixel.x - 1, currentPixel.y);
+			currentPixel = new Point(currentPixel.x - 1, currentPixel.y);
 			if (isRing(currentPixel, this.myThreshold))
 			{
 				ringCount++;
@@ -86,7 +86,7 @@ public class Detector
 		Point currentPixel = startingPoint;
 		do
 		{
-			currentPixel.setLocation(currentPixel.x, currentPixel.y - 1);
+			currentPixel = new Point(currentPixel.x, currentPixel.y - 1);
 			if (isRing(currentPixel, this.myThreshold))
 			{
 				ringCount++;
@@ -111,7 +111,7 @@ public class Detector
 		Point currentPixel = startingPoint;
 		do
 		{
-			currentPixel.setLocation(currentPixel.x, currentPixel.y + 1);
+			currentPixel = new Point(currentPixel.x, currentPixel.y + 1);
 			if (isRing(currentPixel, this.myThreshold))
 			{
 				ringCount++;
@@ -132,6 +132,8 @@ public class Detector
 
 	public int findAge()
 	{
+		//TODO starting point is getting changed. so if we go right first then up, 
+		//		it works for going right, but then starting point is 499 and we go up the right edge of the picture
 		int sum = 0;
 		int numOfDirections = 0;
 		if (this.right)
@@ -139,28 +141,24 @@ public class Detector
 			sum += searchRight();
 			numOfDirections++;
 		}
-			
-		
+
 		if (this.left)
 		{
 			sum += searchLeft();
 			numOfDirections++;
 		}
-			
-		
+
 		if (this.up)
 		{
 			sum += searchUp();
 			numOfDirections++;
 		}
-			
-		
+
 		if (this.down)
 		{
 			sum += searchDown();
 			numOfDirections++;
 		}
-		
 		return sum / numOfDirections;
 	}
 
@@ -178,8 +176,8 @@ public class Detector
 
 	private boolean isRing(Point pixel, int threshold)
 	{
-		int moddedThreshold = threshold / 60000;
-		int moddedPixel = myImage.getRGB(pixel.x, pixel.y) / 60000;
+		int moddedThreshold = threshold; /// 60000;
+		int moddedPixel = myImage.getRGB(pixel.x, pixel.y); /// 60000;
 		if (moddedThreshold > moddedPixel)
 			return true;
 		return false;

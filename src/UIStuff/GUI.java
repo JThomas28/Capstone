@@ -17,6 +17,7 @@ import javax.swing.*;
 
 import analysisStuff.Detector;
 
+@SuppressWarnings("serial")
 public class GUI extends JFrame implements Constants
 {
 	GUIPanel uploadPanel;
@@ -95,24 +96,9 @@ public class GUI extends JFrame implements Constants
 				{
 					if (pathToImage.getText().endsWith(".jpg") || pathToImage.getText().endsWith(".png"))
 					{
-						BufferedImage myBuffImage = null;
-						Image myImage = null;
 						File imageFile = new File(pathToImage.getText());
-						try
-						{
-							// convert to grayscale image
-							myBuffImage = ImageIO.read(imageFile);
-							int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
-							myBuffImage = resizeImage(myBuffImage, type);
-
-							ImageFilter filter = new GrayFilter(true, 50);
-							ImageProducer producer = new FilteredImageSource(myBuffImage.getSource(), filter);
-							myImage = Toolkit.getDefaultToolkit().createImage(producer);
-						}
-						catch (Exception exception)
-						{
-							exception.printStackTrace();
-						}
+						myImage = grayscaleImage(imageFile);
+						// myImage = grayscaleImage(imageFile);
 						TreeObj myTree = new TreeObj("Tree1", myImage);
 
 						choosePoints(myTree);
@@ -135,6 +121,28 @@ public class GUI extends JFrame implements Constants
 			componentPanel.add(fileFormatsAllowed);
 			componentPanel.add(goButton);
 			add(masterPanel);
+		}
+
+		public BufferedImage grayscaleImage(File imageFile)
+		{
+			BufferedImage myBuffImage = null;
+			try
+			{
+				// convert to grayscale image
+				myBuffImage = ImageIO.read(imageFile);
+				int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
+				myBuffImage = resizeImage(myBuffImage, type);
+
+				// ImageFilter filter = new GrayFilter(true, 50);
+				// ImageProducer producer = new
+				// FilteredImageSource(myBuffImage.getSource(), filter);
+				// myImage = Toolkit.getDefaultToolkit().createImage(producer);
+			}
+			catch (Exception exception)
+			{
+				exception.printStackTrace();
+			}
+			return myBuffImage;
 		}
 
 		private void choosePoints(TreeObj myTree)
@@ -208,10 +216,9 @@ public class GUI extends JFrame implements Constants
 			revalidate();
 			repaint();
 			JOptionPane.showMessageDialog(getContentPane(), "Click center of tree cookie");
-
 		}
 
-		private void setDetector(BufferedImage buffImg, Point start, boolean[] edges, Integer threshold)
+		private void setDetector(BufferedImage buffImg, Point start, boolean[] edges, int threshold)
 		{
 			Detector myDetector = new Detector(buffImg, start, edges, threshold);
 			this.myImage = myDetector.getColorizedImage();
@@ -366,11 +373,25 @@ public class GUI extends JFrame implements Constants
 						JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION)
 				{
-					// start new game
-					contentPane.removeAll();
-
-					// contentPane.add(new GUIPanel());
-					contentPane.repaint();
+					try
+					{
+						FileChooser.main(null);
+						File newPicFile = FileChooser.getFile();
+						panel.myImage = ImageIO.read(FileChooser.getFile());
+						panel.numClicks = 0;
+						BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
+						int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
+						panel.myImage = panel.resizeImage(myBuffImage, type);
+						// panel.grayscaleImage(newPicFile);
+						// panel.resizeImage(toBufferedImage(panel.myImage), 0);
+						panel.repaint();
+					}
+					catch (IOException e1)
+					{
+						JOptionPane.showMessageDialog(getContentPane(), NOT_VALID_FILE);
+					}
+					panel.choosePoints(new TreeObj("newtree", panel.myImage));
+					getContentPane().add(panel);
 				}
 			}
 		});
