@@ -5,13 +5,12 @@ import java.awt.image.BufferedImage;
 
 public class TreeObj
 {
-	private int age, estDeathYear;
-	private String name;
 	private Image treeImage;
+	private int age;
 	
-	public TreeObj(String name, Image myImage)
+	public TreeObj(int age, Image myImage)
 	{
-		this.name = name;
+		this.age = age;
 		this.treeImage = myImage;
 	}
 	
@@ -23,5 +22,15 @@ public class TreeObj
 	public void setPicture(Image newPic)
 	{
 		treeImage = newPic;
+	}
+	
+	public int getAge()
+	{
+		return this.age;
+	}
+	
+	public void setAge(int age)
+	{
+		this.age = age;
 	}
 }

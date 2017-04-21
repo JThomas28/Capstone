@@ -10,7 +10,7 @@ public class openWebPage
 	{
 		try
 		{
-			Desktop.getDesktop().browse(new URI("https://www.wunderground.com/history/"));
+			Desktop.getDesktop().browse(new URI("https://www.ncdc.noaa.gov/temp-and-precip/state-temps/"));
 		}
 		catch (IOException e)
 		{

@@ -1,17 +1,19 @@
 package analysisStuff;
 
+import java.awt.Point;
+
 public class Ring
 {
 	private int width;
-	private Boolean largerThanAverage;
-	private int start, end;
+	private Point start, end;
+	private String direction;
 	
-	public Ring(int startX, int endX, int width)
+	public Ring(Point start, Point end, int width, String direction)
 	{
 		this.width = width;
-		this.start = startX;
-		this.end = endX;
-		this.largerThanAverage = null;
+		this.start = start;
+		this.end = end;
+		this.direction = direction;
 	}
 	
 	public int getWidth()
@@ -19,20 +21,18 @@ public class Ring
 		return width;
 	}
 	
-	public int getStart()
+	public String getDirection()
+	{
+		return this.direction;
+	}
+	
+	public Point getStart()
 	{
 		return start;
 	}
 	
-	public int getEnd()
+	public Point getEnd()
 	{
 		return start;
 	}
-	
-	public void setLargerThanAverage(Boolean b)
-	{
-		//null if equals average, true if more than average, false if less than average
-		this.largerThanAverage = b;
-	}
-	
 }

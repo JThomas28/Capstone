@@ -8,7 +8,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
+import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
+import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,53 +30,39 @@ public class GUI extends JFrame implements Constants
 		private Image myImage;
 		private Point centerPoint = null;
 		private boolean[] myEdges;
-
-		// Backround fields
-		JPanel panelHoldingBackgroundImage = new JPanel();
-		JLabel backgroundImageLabel = new JLabel();
-
-		// component fields
-		JPanel panelHoldingComponentPanel = new JPanel();
-		JPanel componentPanel = new JPanel();
+		private File originalFile = null;
 
 		public GUIPanel()
 		{
-			JPanel masterPanel = new JPanel();
-			setLayout(new BorderLayout());
-			panelHoldingBackgroundImage.setLayout(new BorderLayout());
-			backgroundImageLabel.setLayout(new BorderLayout());
-
-			try
-			{
-				// set background image
-				backgroundImageLabel.setIcon(new ImageIcon("forestBackground.jpg"));
-			}
-			catch (Exception e)
-			{
-				// catch exception where image isn't found
-				e.printStackTrace();
-			}
-			// add image to panel
-			panelHoldingBackgroundImage.add(backgroundImageLabel);
-
-			masterPanel.add(panelHoldingBackgroundImage);
-
-			panelHoldingComponentPanel.setLayout(new GridBagLayout());
-			panelHoldingComponentPanel.setOpaque(false);
+			JPanel masterPanel = new JPanel(new GridLayout(2, 1));
+			JPanel titlePanel = new JPanel(new GridBagLayout());
+			JPanel componentPanel = new JPanel();
+			JLabel imageLabel = new JLabel();
+			titlePanel.add(imageLabel);
+			masterPanel.add(titlePanel);
+			masterPanel.add(componentPanel);
 
 			componentPanel.setLayout(new GridLayout(6, 1));
-			componentPanel.setOpaque(true);
-
-			panelHoldingComponentPanel.add(componentPanel);
-			backgroundImageLabel.add(panelHoldingComponentPanel);
-
-			// components
+			getContentPane().setLayout(new GridBagLayout());
 			JLabel chooseFileText = new JLabel(CHOOSE_IMAGE_TEXT);
 			JButton uploadButton = new JButton(BROWSE);
 			JButton goButton = new JButton(GO);
 			JLabel fileFormatsAllowed = new JLabel(AVAILABLE_FILE_FORMATS);
 			JTextField pathToImage = new JTextField(15);
 			JLabel pathTextFieldLabel = new JLabel(PATH_TEXTFIELD);
+
+			try
+			{
+				// add image to title page
+				Image titleImage = ImageIO.read(new File("thomas_profile.png"));
+				Image newImage = titleImage.getScaledInstance(200, 200, 200);
+				imageLabel.setIcon(new ImageIcon(newImage));
+				titlePanel.add(imageLabel);
+			}
+			catch (IOException e1)
+			{
+				e1.printStackTrace();
+			}
 
 			// fileupload button listener
 			uploadButton.addActionListener(new ActionListener()
@@ -97,13 +85,12 @@ public class GUI extends JFrame implements Constants
 					if (pathToImage.getText().endsWith(".jpg") || pathToImage.getText().endsWith(".png"))
 					{
 						File imageFile = new File(pathToImage.getText());
-						myImage = grayscaleImage(imageFile);
+						originalFile = imageFile;
+						myImage = getImageFromFile(imageFile);
 						// myImage = grayscaleImage(imageFile);
-						TreeObj myTree = new TreeObj("Tree1", myImage);
+						TreeObj myTree = new TreeObj(0, myImage);
 
 						choosePoints(myTree);
-
-						// resultGUI(myTree);
 					}
 					else
 						JOptionPane.showMessageDialog(getContentPane(), NOT_VALID_FILE);
@@ -123,20 +110,15 @@ public class GUI extends JFrame implements Constants
 			add(masterPanel);
 		}
 
-		public BufferedImage grayscaleImage(File imageFile)
+		public BufferedImage getImageFromFile(File imageFile)
 		{
 			BufferedImage myBuffImage = null;
 			try
 			{
-				// convert to grayscale image
 				myBuffImage = ImageIO.read(imageFile);
 				int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
 				myBuffImage = resizeImage(myBuffImage, type);
 
-				// ImageFilter filter = new GrayFilter(true, 50);
-				// ImageProducer producer = new
-				// FilteredImageSource(myBuffImage.getSource(), filter);
-				// myImage = Toolkit.getDefaultToolkit().createImage(producer);
 			}
 			catch (Exception exception)
 			{
@@ -148,6 +130,7 @@ public class GUI extends JFrame implements Constants
 		private void choosePoints(TreeObj myTree)
 		{
 			removeAll();
+
 			Image treeImage = myTree.getPicture();
 			BufferedImage myBuffImg = toBufferedImage(treeImage);
 
@@ -182,6 +165,9 @@ public class GUI extends JFrame implements Constants
 				{
 					try
 					{
+						// TODO don't allow a click near edges since we're
+						// setting pixels to right, left, above, below current
+						// pixel
 						numClicks++;
 						int x = e.getX();
 						int y = e.getY();
@@ -191,16 +177,25 @@ public class GUI extends JFrame implements Constants
 						{
 							// center point
 							centerPoint = new Point(x, y);
-							myEdges = getEdgesToMeasureTo();
-							JOptionPane.showMessageDialog(getContentPane(),
-									"Almost done! Now choose a point between the rings.\n"
-											+ "This will be used as a threshold, to detect the darker color of the rings.");
+							if (centerPoint.x < 4 || centerPoint.x > 496 || centerPoint.y < 4 || centerPoint.x > 496)
+							{
+								JOptionPane.showMessageDialog(getContentPane(),
+										"Point too close to edge, choose anoter point closer to center of image");
+								numClicks = 0;
+							}
+							else
+							{
+								myEdges = getEdgesToMeasureTo();
+								JOptionPane.showMessageDialog(getContentPane(),
+										"Almost done! Now choose a point between the rings.\n"
+												+ "This will be used as a threshold, to detect the darker color of the rings.");
+							}
 						}
 
 						else
 						{
 							threshold = myBuffImg.getRGB(x, y);
-							setDetector(myBuffImg, centerPoint, myEdges, threshold);
+							setDetector(myBuffImg, centerPoint, myEdges, threshold, myTree);
 						}
 						System.out.println(x + ", " + y);
 					}
@@ -218,11 +213,15 @@ public class GUI extends JFrame implements Constants
 			JOptionPane.showMessageDialog(getContentPane(), "Click center of tree cookie");
 		}
 
-		private void setDetector(BufferedImage buffImg, Point start, boolean[] edges, int threshold)
+		private void setDetector(BufferedImage buffImg, Point start, boolean[] edges, int threshold, TreeObj myTree)
 		{
 			Detector myDetector = new Detector(buffImg, start, edges, threshold);
+			int age = myDetector.findAge();
+			myTree.setAge(age);
+			// myDetector.getLargestFive();
 			this.myImage = myDetector.getColorizedImage();
-			resultGUI(myDetector.findAge());
+			myTree.setPicture(myDetector.getColorizedImage());
+			resultGUI(myTree);
 		}
 
 		private boolean[] getEdgesToMeasureTo()
@@ -283,34 +282,83 @@ public class GUI extends JFrame implements Constants
 			return resizedImage;
 		}
 
-		public void resultGUI(int age)// TreeObj myTree)
+		public void resultGUI(TreeObj myTree)
 		{
-			// TODO add background image to second GUI
 			removeAll();
-			// setLayout(new GridLayout(2, 1));
+			setBackground(Color.DARK_GRAY);
 			setLayout(new FlowLayout());
+			JPanel master = new JPanel(new GridLayout(1, 2));
+			master.setPreferredSize(new Dimension(1000, 700));
 
-			JPanel panel = new JPanel();
 			JPanel panel2 = new JPanel();
+			JPanel panel = new JPanel();
+			master.add(panel2);
+			master.add(panel);
 
-			panel.setLayout(new GridLayout(5, 1));
-			panel2.setLayout(new FlowLayout());
+			panel.setLayout(new GridLayout(6, 1));
+			panel2.setLayout(new GridBagLayout());
 
-			add(new JLabel(new ImageIcon(myImage)));
+			JLabel image = new JLabel(new ImageIcon(myImage));
 
-			// myTree.getPicture().getGraphics().add(new JLabel(new
-			// ImageIcon(myTree.getPicture())));
-			// add(new JLabel(new ImageIcon(picture)));
+			JLabel information = new JLabel(
+					"<html><div style='text-align: center;'>" + Constants.INFORMATION + "</div></html>");
+			JButton moreInfo = new JButton(Constants.MORE_INFO);
+			JLabel ageLabel = new JLabel("Estimated age: " + myTree.getAge() + "");
+			JButton addDeathYear = new JButton("Add Death Year");
+			JLabel greaterGrowth = new JLabel("Greater than average growth years: ");
+			JLabel lesserGrowth = new JLabel("Greater than average growth years: ");
 
-			panel.add(new JLabel("Estimated age: " + age + "years old"));
-			panel.add(new JLabel("Above Average growth years: 1996, 1998"));
-			panel.add(new JLabel("Below Average growth years: 2002"));
-			JButton moreInfo = new JButton("More Info");
-			panel.add(moreInfo);
+			information.setFont(new Font("Serif", Font.BOLD, 20));
+			ageLabel.setFont(new Font("Serif", Font.BOLD, 16));
 
-			JButton addAnother = new JButton("Click Here To Add Another Image To Analyze");
-			panel2.add(addAnother);
+			panel.add(information);
+			panel.add(ageLabel);
+			panel2.add(image);
 
+			moreInfo.setEnabled(false);
+			if (myTree.getAge() <= 5)
+			{
+				addDeathYear.setEnabled(false);
+			}
+
+			addDeathYear.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					boolean inputAccepted = false;
+					while (!inputAccepted)
+					{
+						int deathYear = 0;
+						try
+						{
+							deathYear = Integer
+									.parseInt(JOptionPane.showInputDialog(null, "Enter estimated death year"));
+							if (deathYear < 1000)
+							{
+								JOptionPane.showMessageDialog(null, "Year must be more than 1000");
+							}
+							else
+							{
+								inputAccepted = true;
+								moreInfo.setEnabled(true);
+								// TODO call method to calculate >avg, <avg
+								// TODO fix this so it neatly displays
+								// everything
+								panel.add(greaterGrowth);
+								panel.add(lesserGrowth);
+								panel.revalidate();
+								panel.repaint();
+								break;
+							}
+						}
+						catch (NumberFormatException e1)
+						{
+							JOptionPane.showMessageDialog(null, "Year must be an integer");
+						}
+					}
+				}
+			});
 			moreInfo.addActionListener(new ActionListener()
 			{
 				@Override
@@ -326,18 +374,9 @@ public class GUI extends JFrame implements Constants
 					}
 				}
 			});
-
-			addAnother.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
-				{
-					// TODO allow user to add another image to analyze
-					// new GUIPanel();
-				}
-			});
-			add(panel);
-			panel.add(panel2);
+			panel.add(moreInfo);
+			panel.add(addDeathYear);
+			add(master);
 			revalidate();
 			repaint();
 		}
@@ -346,7 +385,11 @@ public class GUI extends JFrame implements Constants
 	public GUI()
 	{
 		super(FRAME_TITLE);
+		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+		// set background
+		setContentPane(new JLabel(new ImageIcon("forestBackground.jpg")));
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
@@ -357,8 +400,10 @@ public class GUI extends JFrame implements Constants
 		JMenuBar menuBar = new JMenuBar();
 		JMenu newUpload = new JMenu("New");
 		JMenuItem newUploadButton = new JMenuItem("New Upload");
+		JMenuItem newThreshold = new JMenuItem("New Threshold");
 
 		newUpload.add(newUploadButton);
+		newUpload.add(newThreshold);
 		menuBar.add(newUpload);
 		setJMenuBar(menuBar);
 
@@ -373,26 +418,33 @@ public class GUI extends JFrame implements Constants
 						JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION)
 				{
-					try
-					{
-						FileChooser.main(null);
-						File newPicFile = FileChooser.getFile();
-						panel.myImage = ImageIO.read(FileChooser.getFile());
-						panel.numClicks = 0;
-						BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
-						int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
-						panel.myImage = panel.resizeImage(myBuffImage, type);
-						// panel.grayscaleImage(newPicFile);
-						// panel.resizeImage(toBufferedImage(panel.myImage), 0);
-						panel.repaint();
-					}
-					catch (IOException e1)
-					{
-						JOptionPane.showMessageDialog(getContentPane(), NOT_VALID_FILE);
-					}
-					panel.choosePoints(new TreeObj("newtree", panel.myImage));
+					FileChooser.main(null);
+					panel.originalFile = FileChooser.getFile();
+					panel.myImage = panel.getImageFromFile(FileChooser.getFile());
+					panel.numClicks = 0;
+					BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
+					int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
+					panel.myImage = panel.resizeImage(myBuffImage, type);
+					panel.repaint();
+					panel.choosePoints(new TreeObj(0, panel.myImage));
 					getContentPane().add(panel);
 				}
+			}
+		});
+
+		newThreshold.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				panel.myImage = panel.getImageFromFile(panel.originalFile);
+				panel.numClicks = 0;
+				BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
+				int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
+				panel.myImage = panel.resizeImage(myBuffImage, type);
+				panel.repaint();
+				panel.choosePoints(new TreeObj(0, panel.myImage));
+				getContentPane().add(panel);
 			}
 		});
 		contentPane.add(panel);
