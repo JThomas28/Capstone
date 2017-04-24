@@ -6,11 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +15,12 @@ import javax.swing.*;
 
 import analysisStuff.Detector;
 
+/**
+ * GUI contains the main user interface data and functionality. 
+ * This is where the program begins and it calls other classes and methods as needed
+ * @author JonathanThomas
+ * @version 4/28/17
+ */
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements Constants
 {
@@ -40,6 +41,7 @@ public class GUI extends JFrame implements Constants
 			JPanel titlePanel = new JPanel(new GridBagLayout());
 			JPanel componentPanel = new JPanel();
 			JLabel imageLabel = new JLabel();
+
 			titlePanel.add(imageLabel);
 			masterPanel.add(titlePanel);
 			masterPanel.add(componentPanel);
@@ -56,7 +58,7 @@ public class GUI extends JFrame implements Constants
 			try
 			{
 				// add image to title page
-				Image titleImage = ImageIO.read(new File("thomas_profile.png"));
+				Image titleImage = ImageIO.read(new File(TITLE_IMAGE));
 				Image newImage = titleImage.getScaledInstance(200, 200, 200);
 				imageLabel.setIcon(new ImageIcon(newImage));
 				titlePanel.add(imageLabel);
@@ -84,12 +86,12 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
+					// make sure file is jpg or png image
 					if (pathToImage.getText().endsWith(".jpg") || pathToImage.getText().endsWith(".png"))
 					{
 						File imageFile = new File(pathToImage.getText());
 						originalFile = imageFile;
 						myImage = getImageFromFile(imageFile);
-						// myImage = grayscaleImage(imageFile);
 						TreeObj myTree = new TreeObj(0, myImage);
 
 						choosePoints(myTree);
@@ -100,9 +102,6 @@ public class GUI extends JFrame implements Constants
 			});
 
 			// add components to panel
-			// TODO erase this line. Just using it to make testing easier
-			pathToImage.setText("/Users/JonathanThomas/Desktop/Trees/dense_rings.jpg");
-
 			componentPanel.add(chooseFileText);
 			componentPanel.add(uploadButton);
 			componentPanel.add(pathTextFieldLabel);
@@ -112,6 +111,13 @@ public class GUI extends JFrame implements Constants
 			add(masterPanel);
 		}
 
+		/**
+		 * returns buffered image from file passed in
+		 * 
+		 * @param imageFile
+		 *            - file to read from
+		 * @return bufferedImage contained in the file
+		 */
 		public BufferedImage getImageFromFile(File imageFile)
 		{
 			BufferedImage myBuffImage = null;
@@ -125,10 +131,18 @@ public class GUI extends JFrame implements Constants
 			catch (Exception exception)
 			{
 				exception.printStackTrace();
+				JOptionPane.showConfirmDialog(null, "Couldn't find image. Try again");
 			}
 			return myBuffImage;
 		}
 
+		/**
+		 * Second 'page' of UI. Gets mouse cicks and passes info to the detector
+		 * object to detect the rings
+		 * 
+		 * @param myTree
+		 *            - tree object holding the image to analyze
+		 */
 		private void choosePoints(TreeObj myTree)
 		{
 			removeAll();
@@ -166,9 +180,6 @@ public class GUI extends JFrame implements Constants
 				{
 					try
 					{
-						// TODO don't allow a click near edges since we're
-						// setting pixels to right, left, above, below current
-						// pixel
 						numClicks++;
 						int x = e.getX();
 						int y = e.getY();
@@ -178,6 +189,8 @@ public class GUI extends JFrame implements Constants
 						{
 							// center point
 							centerPoint = new Point(x, y);
+
+							// can't choose point too close to edge
 							if (centerPoint.x < 4 || centerPoint.x > 496 || centerPoint.y < 4 || centerPoint.y > 496)
 							{
 								JOptionPane.showMessageDialog(getContentPane(),
@@ -198,7 +211,6 @@ public class GUI extends JFrame implements Constants
 							threshold = myBuffImg.getRGB(x, y);
 							setDetector(myBuffImg, centerPoint, myEdges, threshold, myTree);
 						}
-						System.out.println(x + ", " + y);
 					}
 					catch (ArrayIndexOutOfBoundsException exc)
 					{
@@ -214,29 +226,25 @@ public class GUI extends JFrame implements Constants
 			JOptionPane.showMessageDialog(getContentPane(), "Click center of tree cookie");
 		}
 
-		private void setDetector(BufferedImage buffImg, Point start, boolean[] edges, int threshold, TreeObj myTree)
-		{
-			Detector myDetector = new Detector(buffImg, start, edges, threshold);
-			int age = myDetector.findAge();
-			myTree.setAge(age);
-			this.myImage = myDetector.getColorizedImage();
-			myTree.setPicture(myDetector.getColorizedImage());
-			this.maxEdges = myDetector.getMaxPoints();
-			resultGUI(myTree);
-		}
-
+		/**
+		 * Displays a joption pane with options on directions to measure in
+		 * 
+		 * @return boolean array with T/F values for each direction
+		 */
 		private boolean[] getEdgesToMeasureTo()
 		{
 			boolean[] myBools = new boolean[4];
-			String select = "Select which edges to measure to";
-			JCheckBox right = new JCheckBox("Right");
-			JCheckBox left = new JCheckBox("Left");
-			JCheckBox up = new JCheckBox("Up");
-			JCheckBox down = new JCheckBox("Down");
+
+			String select = SELECT_EDGES;
+			JCheckBox right = new JCheckBox(RIGHT);
+			JCheckBox left = new JCheckBox(LEFT);
+			JCheckBox up = new JCheckBox(UP);
+			JCheckBox down = new JCheckBox(DOWN);
+
 			JCheckBox myBoxes[] = { right, left, up, down };
 			Object[] params = { select, right, left, up, down };
 
-			JOptionPane.showMessageDialog(null, params, "Choose Edges", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, params, CHOOSE_EDGES, JOptionPane.PLAIN_MESSAGE);
 			for (int i = 0; i < 4; i++)
 				myBools[i] = myBoxes[i].isSelected();
 
@@ -253,26 +261,69 @@ public class GUI extends JFrame implements Constants
 				return getEdgesToMeasureTo();
 		}
 
+		/**
+		 * Passes all the necessary data to detector to begin the pixel analysis
+		 * 
+		 * @param buffImg
+		 *            - image to analyze
+		 * @param start
+		 *            - point chosen as starting point
+		 * @param edges
+		 *            - boolean array with direction to measure in data
+		 * @param threshold
+		 *            - color value of point chosen as threshold
+		 * @param myTree
+		 *            - tree object to analyze
+		 */
+		private void setDetector(BufferedImage buffImg, Point start, boolean[] edges, int threshold, TreeObj myTree)
+		{
+			Detector myDetector = new Detector(buffImg, start, edges, threshold);
+
+			// get the age
+			int age = myDetector.findAge();
+			myTree.setAge(age);
+
+			// set my image to the image with rings detected
+			this.myImage = myDetector.getColorizedImage();
+			myTree.setPicture(myDetector.getColorizedImage());
+
+			// get the widest edges. To be used if user enters death year
+			this.maxEdges = myDetector.getMaxPoints();
+
+			// call method to show results
+			resultGUI(myTree);
+		}
+
+		/**
+		 * Converts image to bufferedImage
+		 * 
+		 * @param img
+		 *            - image to be converted
+		 * @return converted buffered image
+		 */
 		private BufferedImage toBufferedImage(Image img)
 		{
 			if (img instanceof BufferedImage)
 			{
 				return (BufferedImage) img;
 			}
-
-			// Create a buffered image with transparency
 			BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null),
 					BufferedImage.TYPE_INT_ARGB);
 
-			// Draw the image on to the buffered image
 			Graphics2D bGr = bimage.createGraphics();
 			bGr.drawImage(img, 0, 0, null);
 			bGr.dispose();
 
-			// Return the buffered image
 			return bimage;
 		}
 
+		/**
+		 * Resizes image passed in to 500 by 500. 
+		 * Useful because all images will be 500 pixels by 500
+		 * @param originalImage - image passed in. (Pre-resize)
+		 * @param type - type of image
+		 * @return resized buffered image
+		 */
 		private BufferedImage resizeImage(BufferedImage originalImage, int type)
 		{
 			BufferedImage resizedImage = new BufferedImage(500, 500, type);
@@ -305,7 +356,7 @@ public class GUI extends JFrame implements Constants
 					"<html><div style='text-align: center;'>" + Constants.INFORMATION + "</div></html>");
 			JButton moreInfo = new JButton(Constants.MORE_INFO);
 			JLabel ageLabel = new JLabel("Estimated age: " + myTree.getAge() + "");
-			JButton addDeathYear = new JButton("Add Death Year");
+			JButton addDeathYear = new JButton(ADD_DEATH_YEAR);
 			JLabel greaterGrowth = new JLabel();
 
 			information.setFont(new Font("Serif", Font.BOLD, 20));
@@ -321,6 +372,7 @@ public class GUI extends JFrame implements Constants
 			moreInfo.setEnabled(false);
 			if (myTree.getAge() <= 5 || maxEdges.size() == 0)
 			{
+				//need 5 rings before we can add a death year
 				addDeathYear.setEnabled(false);
 			}
 
@@ -334,7 +386,7 @@ public class GUI extends JFrame implements Constants
 						boolean accepted = false;
 						while (!accepted)
 						{
-							String ans = JOptionPane.showInputDialog(null, "Enter estimated death year");
+							String ans = JOptionPane.showInputDialog(null, ENTER_ESTIMATE);
 							if (ans.equals(JOptionPane.CANCEL_OPTION))
 								break;
 							else
@@ -345,7 +397,7 @@ public class GUI extends JFrame implements Constants
 									deathYear = Integer.parseInt(ans);
 									if (deathYear < 1000)
 									{
-										JOptionPane.showMessageDialog(null, "Year must be more than 1000");
+										JOptionPane.showMessageDialog(null, YEAR_REQUIREMENT);
 									}
 									else
 									{
@@ -354,11 +406,12 @@ public class GUI extends JFrame implements Constants
 										String years = "";
 										for (int i = 0; i < maxEdges.size() - 1; i++)
 										{
-											years += deathYear - myTree.getAge() + maxEdges.get(i) + ",";
+											years += (deathYear - myTree.getAge()) + maxEdges.get(i) + ",";
 										}
 										years += deathYear - myTree.getAge() + maxEdges.get(maxEdges.size() - 1);
-										greaterGrowth.setText("Greater than average growth years: " + (years));
+										greaterGrowth.setText(MORE_THAN_AVERAGE + (years));
 										panel.add(greaterGrowth);
+										
 										panel.add(Box.createRigidArea(new Dimension(0, 42)));
 										panel.add(Box.createRigidArea(new Dimension(0, 42)));
 										panel.revalidate();
@@ -377,6 +430,8 @@ public class GUI extends JFrame implements Constants
 					}
 				}
 			});
+			
+			//listener for moreinfo button. Opens webpage in default browser
 			moreInfo.addActionListener(new ActionListener()
 			{
 				@Override
@@ -392,6 +447,7 @@ public class GUI extends JFrame implements Constants
 					}
 				}
 			});
+			
 			panel.add(moreInfo);
 			panel.add(Box.createRigidArea(new Dimension(0, 42)));
 			panel.add(addDeathYear);
@@ -402,25 +458,29 @@ public class GUI extends JFrame implements Constants
 		}
 	}
 
+	/**
+	 * Setup JFrame with all components/background
+	 */
 	public GUI()
 	{
 		super(FRAME_TITLE);
 		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+		//GUI fills screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
 
 		// set background
-		setContentPane(new JLabel(new ImageIcon("forestBackground.jpg")));
+		setContentPane(new JLabel(new ImageIcon(PATH_TO_BACKGROUND_IMAGE)));
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		JMenuBar menuBar = new JMenuBar();
-		JMenu newUpload = new JMenu("New");
-		JMenuItem newUploadButton = new JMenuItem("New Upload");
-		JMenuItem newThreshold = new JMenuItem("New Threshold");
+		JMenu newUpload = new JMenu(NEW);
+		JMenuItem newUploadButton = new JMenuItem(NEW_UPLOAD);
+		JMenuItem newThreshold = new JMenuItem(NEW_THRESHOLD);
 
 		newUpload.add(newUploadButton);
 		newUpload.add(newThreshold);
@@ -434,7 +494,7 @@ public class GUI extends JFrame implements Constants
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				int result = JOptionPane.showConfirmDialog(GUI.this, "Analyze new image?", "Confirm",
+				int result = JOptionPane.showConfirmDialog(GUI.this, ANALYZE_NEW, CONFIRM,
 						JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION)
 				{
@@ -442,10 +502,12 @@ public class GUI extends JFrame implements Constants
 					panel.originalFile = FileChooser.getFile();
 					panel.myImage = panel.getImageFromFile(FileChooser.getFile());
 					panel.numClicks = 0;
+					
 					BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
 					int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
 					panel.myImage = panel.resizeImage(myBuffImage, type);
 					panel.repaint();
+					
 					panel.choosePoints(new TreeObj(0, panel.myImage));
 					getContentPane().add(panel);
 				}
@@ -459,8 +521,10 @@ public class GUI extends JFrame implements Constants
 			{
 				panel.myImage = panel.getImageFromFile(panel.originalFile);
 				panel.numClicks = 0;
+				
 				BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
 				int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
+				
 				panel.myImage = panel.resizeImage(myBuffImage, type);
 				panel.repaint();
 				panel.choosePoints(new TreeObj(0, panel.myImage));
@@ -470,6 +534,10 @@ public class GUI extends JFrame implements Constants
 		contentPane.add(panel);
 	}
 
+	/**
+	 * Creates and shows GUI
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		JFrame f = new GUI();

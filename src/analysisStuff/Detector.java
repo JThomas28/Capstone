@@ -1,13 +1,20 @@
 package analysisStuff;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * Detector is the object used to analyze each pixel. A detector consists of an
+ * image, starting point, array of directions, and a threshold value
+ * 
+ * @author JonathanThomas
+ * @version 4/28/17
+ */
 public class Detector
 {
+	private final int normalizeValue = 100000;
 
 	private BufferedImage myImage;
 	private int myThreshold;
@@ -106,7 +113,7 @@ public class Detector
 			{
 				int width = 0;
 				Point start = currentPixel;
-				while(!isRing(currentPixel, this.myThreshold)&& inBounds(currentPixel.x - 1, currentPixel.y))
+				while (!isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x - 1, currentPixel.y))
 				{
 					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
 					this.myImage.setRGB(currentPixel.x, currentPixel.y - 1, Color.blue.getRGB());
@@ -116,7 +123,7 @@ public class Detector
 				}
 				Point end = currentPixel;
 				Ring betweenRings = new Ring(start, end, width, "Left");
-				this.betweenRings.add(betweenRings);				
+				this.betweenRings.add(betweenRings);
 			}
 			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
 			this.myImage.setRGB(currentPixel.x, currentPixel.y - 1, Color.blue.getRGB());
@@ -209,7 +216,7 @@ public class Detector
 				Ring betweenRings = new Ring(start, end, width, "Down");
 				this.betweenRings.add(betweenRings);
 			}
-			
+
 			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.BLUE.getRGB());
 			this.myImage.setRGB(currentPixel.x - 1, currentPixel.y, Color.BLUE.getRGB());
 			this.myImage.setRGB(currentPixel.x + 1, currentPixel.y, Color.BLUE.getRGB());
@@ -227,19 +234,19 @@ public class Detector
 			int max = 0;
 			int index = 0;
 			splitBetweenRings();
-			for(int i = 0; i < rightBetweenRings.size(); i++)
+			for (int i = 0; i < rightBetweenRings.size(); i++)
 			{
 				Ring curr = rightBetweenRings.get(i);
-				if(curr.getDirection().equals("Right"))
+				if (curr.getDirection().equals("Right"))
 				{
-					if(curr.getWidth() > max)
+					if (curr.getWidth() > max)
 					{
 						max = curr.getWidth();
 						index = i;
 					}
 				}
 			}
-			if(index > 0)
+			if (index > 0)
 			{
 				maxPointsIndex.add(index);
 			}
@@ -252,19 +259,19 @@ public class Detector
 			int max = 0;
 			int index = 0;
 			splitBetweenRings();
-			for(int i = 0; i < leftBetweenRings.size(); i++)
+			for (int i = 0; i < leftBetweenRings.size(); i++)
 			{
 				Ring curr = leftBetweenRings.get(i);
-				if(curr.getDirection().equals("Left"))
+				if (curr.getDirection().equals("Left"))
 				{
-					if(curr.getWidth() > max)
+					if (curr.getWidth() > max)
 					{
 						max = curr.getWidth();
 						index = i;
 					}
 				}
 			}
-			if(index > 0)
+			if (index > 0)
 			{
 				maxPointsIndex.add(index);
 			}
@@ -277,19 +284,19 @@ public class Detector
 			int max = 0;
 			int index = 0;
 			splitBetweenRings();
-			for(int i = 0; i < upBetweenRings.size(); i++)
+			for (int i = 0; i < upBetweenRings.size(); i++)
 			{
 				Ring curr = upBetweenRings.get(i);
-				if(curr.getDirection().equals("Up"))
+				if (curr.getDirection().equals("Up"))
 				{
-					if(curr.getWidth() > max)
+					if (curr.getWidth() > max)
 					{
 						max = curr.getWidth();
 						index = i;
 					}
 				}
 			}
-			if(index > 0)
+			if (index > 0)
 			{
 				maxPointsIndex.add(index);
 			}
@@ -302,19 +309,19 @@ public class Detector
 			int max = 0;
 			int index = 0;
 			splitBetweenRings();
-			for(int i = 0; i < downBetweenRings.size(); i++)
+			for (int i = 0; i < downBetweenRings.size(); i++)
 			{
 				Ring curr = downBetweenRings.get(i);
-				if(curr.getDirection().equals("Down"))
+				if (curr.getDirection().equals("Down"))
 				{
-					if(curr.getWidth() > max)
+					if (curr.getWidth() > max)
 					{
 						max = curr.getWidth();
 						index = i;
 					}
 				}
 			}
-			if(index > 0)
+			if (index > 0)
 			{
 				maxPointsIndex.add(index);
 			}
@@ -322,7 +329,7 @@ public class Detector
 		}
 		return sum / numOfDirections;
 	}
-	
+
 	public ArrayList<Integer> getMaxPoints()
 	{
 		return maxPointsIndex;
@@ -330,17 +337,17 @@ public class Detector
 
 	private void splitBetweenRings()
 	{
-		for(Ring ring : betweenRings)
+		for (Ring ring : betweenRings)
 		{
-			if(ring.getDirection().equals("Down"))
+			if (ring.getDirection().equals("Down"))
 			{
 				downBetweenRings.add(ring);
 			}
-			else if(ring.getDirection().equals("Left"))
+			else if (ring.getDirection().equals("Left"))
 			{
 				leftBetweenRings.add(ring);
 			}
-			else if(ring.getDirection().equals("Right"))
+			else if (ring.getDirection().equals("Right"))
 			{
 				rightBetweenRings.add(ring);
 			}
@@ -353,8 +360,8 @@ public class Detector
 
 	private boolean isRing(Point pixel, int threshold)
 	{
-		int moddedThreshold = threshold / 100000;
-		int moddedPixel = myImage.getRGB(pixel.x, pixel.y) / 100000;
+		int moddedThreshold = threshold / normalizeValue;
+		int moddedPixel = myImage.getRGB(pixel.x, pixel.y) / normalizeValue;
 		if (moddedThreshold > moddedPixel)// darker pixel
 			return true;
 		return false;
@@ -372,5 +379,4 @@ public class Detector
 		else
 			return false;
 	}
-
 }
