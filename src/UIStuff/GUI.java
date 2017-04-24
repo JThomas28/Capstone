@@ -13,6 +13,7 @@ import java.awt.image.ImageProducer;
 import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,6 +32,7 @@ public class GUI extends JFrame implements Constants
 		private Point centerPoint = null;
 		private boolean[] myEdges;
 		private File originalFile = null;
+		private ArrayList<Integer> maxEdges = null;
 
 		public GUIPanel()
 		{
@@ -139,7 +141,6 @@ public class GUI extends JFrame implements Constants
 			JPanel picPanel = new JPanel();
 			picPanel.setLayout(new FlowLayout());
 
-			// myBuffImg = resizeImage(myBuffImg, type);
 			picPanel.add(new JLabel(new ImageIcon(myBuffImg)));
 
 			picPanel.addMouseListener(new MouseListener()
@@ -177,7 +178,7 @@ public class GUI extends JFrame implements Constants
 						{
 							// center point
 							centerPoint = new Point(x, y);
-							if (centerPoint.x < 4 || centerPoint.x > 496 || centerPoint.y < 4 || centerPoint.x > 496)
+							if (centerPoint.x < 4 || centerPoint.x > 496 || centerPoint.y < 4 || centerPoint.y > 496)
 							{
 								JOptionPane.showMessageDialog(getContentPane(),
 										"Point too close to edge, choose anoter point closer to center of image");
@@ -218,9 +219,9 @@ public class GUI extends JFrame implements Constants
 			Detector myDetector = new Detector(buffImg, start, edges, threshold);
 			int age = myDetector.findAge();
 			myTree.setAge(age);
-			// myDetector.getLargestFive();
 			this.myImage = myDetector.getColorizedImage();
 			myTree.setPicture(myDetector.getColorizedImage());
+			this.maxEdges = myDetector.getMaxPoints();
 			resultGUI(myTree);
 		}
 
@@ -288,14 +289,14 @@ public class GUI extends JFrame implements Constants
 			setBackground(Color.DARK_GRAY);
 			setLayout(new FlowLayout());
 			JPanel master = new JPanel(new GridLayout(1, 2));
-			master.setPreferredSize(new Dimension(1000, 700));
+			master.setPreferredSize(new Dimension(1000, 500));
 
 			JPanel panel2 = new JPanel();
 			JPanel panel = new JPanel();
 			master.add(panel2);
 			master.add(panel);
 
-			panel.setLayout(new GridLayout(6, 1));
+			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 			panel2.setLayout(new GridBagLayout());
 
 			JLabel image = new JLabel(new ImageIcon(myImage));
@@ -305,18 +306,20 @@ public class GUI extends JFrame implements Constants
 			JButton moreInfo = new JButton(Constants.MORE_INFO);
 			JLabel ageLabel = new JLabel("Estimated age: " + myTree.getAge() + "");
 			JButton addDeathYear = new JButton("Add Death Year");
-			JLabel greaterGrowth = new JLabel("Greater than average growth years: ");
-			JLabel lesserGrowth = new JLabel("Greater than average growth years: ");
+			JLabel greaterGrowth = new JLabel();
 
 			information.setFont(new Font("Serif", Font.BOLD, 20));
 			ageLabel.setFont(new Font("Serif", Font.BOLD, 16));
+			information.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 			panel.add(information);
+			panel.add(Box.createRigidArea(new Dimension(0, 42)));
 			panel.add(ageLabel);
+			panel.add(Box.createRigidArea(new Dimension(0, 42)));
 			panel2.add(image);
 
 			moreInfo.setEnabled(false);
-			if (myTree.getAge() <= 5)
+			if (myTree.getAge() <= 5 || maxEdges.size() == 0)
 			{
 				addDeathYear.setEnabled(false);
 			}
@@ -326,36 +329,51 @@ public class GUI extends JFrame implements Constants
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					boolean inputAccepted = false;
-					while (!inputAccepted)
+					try
 					{
-						int deathYear = 0;
-						try
+						boolean accepted = false;
+						while (!accepted)
 						{
-							deathYear = Integer
-									.parseInt(JOptionPane.showInputDialog(null, "Enter estimated death year"));
-							if (deathYear < 1000)
-							{
-								JOptionPane.showMessageDialog(null, "Year must be more than 1000");
-							}
+							String ans = JOptionPane.showInputDialog(null, "Enter estimated death year");
+							if (ans.equals(JOptionPane.CANCEL_OPTION))
+								break;
 							else
 							{
-								inputAccepted = true;
-								moreInfo.setEnabled(true);
-								// TODO call method to calculate >avg, <avg
-								// TODO fix this so it neatly displays
-								// everything
-								panel.add(greaterGrowth);
-								panel.add(lesserGrowth);
-								panel.revalidate();
-								panel.repaint();
-								break;
+								try
+								{
+									int deathYear = 0;
+									deathYear = Integer.parseInt(ans);
+									if (deathYear < 1000)
+									{
+										JOptionPane.showMessageDialog(null, "Year must be more than 1000");
+									}
+									else
+									{
+										moreInfo.setEnabled(true);
+										accepted = true;
+										String years = "";
+										for (int i = 0; i < maxEdges.size() - 1; i++)
+										{
+											years += deathYear - myTree.getAge() + maxEdges.get(i) + ",";
+										}
+										years += deathYear - myTree.getAge() + maxEdges.get(maxEdges.size() - 1);
+										greaterGrowth.setText("Greater than average growth years: " + (years));
+										panel.add(greaterGrowth);
+										panel.add(Box.createRigidArea(new Dimension(0, 42)));
+										panel.add(Box.createRigidArea(new Dimension(0, 42)));
+										panel.revalidate();
+										panel.repaint();
+									}
+								}
+								catch (NumberFormatException e2)
+								{
+									JOptionPane.showMessageDialog(null, "Year must be a number");
+								}
 							}
 						}
-						catch (NumberFormatException e1)
-						{
-							JOptionPane.showMessageDialog(null, "Year must be an integer");
-						}
+					}
+					catch (NullPointerException e3)
+					{
 					}
 				}
 			});
@@ -375,7 +393,9 @@ public class GUI extends JFrame implements Constants
 				}
 			});
 			panel.add(moreInfo);
+			panel.add(Box.createRigidArea(new Dimension(0, 42)));
 			panel.add(addDeathYear);
+			panel.add(Box.createRigidArea(new Dimension(0, 42)));
 			add(master);
 			revalidate();
 			repaint();
@@ -388,11 +408,11 @@ public class GUI extends JFrame implements Constants
 		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		// set background
-		setContentPane(new JLabel(new ImageIcon("forestBackground.jpg")));
-
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
+
+		// set background
+		setContentPane(new JLabel(new ImageIcon("forestBackground.jpg")));
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));

@@ -12,8 +12,8 @@ public class Detector
 	private BufferedImage myImage;
 	private int myThreshold;
 	private Point startingPoint;
-	private ArrayList<Ring> rings;
-	private ArrayList<Ring> rightRings, leftRings, upRings, downRings;
+	private ArrayList<Ring> rings, betweenRings, downBetweenRings, leftBetweenRings, rightBetweenRings, upBetweenRings;
+	private ArrayList<Integer> maxPointsIndex;
 	private boolean right, left, up, down;
 
 	public Detector(BufferedImage myImage, Point startingPoint, boolean[] edges, int myThreshold)
@@ -25,6 +25,12 @@ public class Detector
 		this.down = edges[3];
 		this.myImage = myImage;
 		this.rings = new ArrayList<Ring>();
+		this.betweenRings = new ArrayList<Ring>();
+		this.downBetweenRings = new ArrayList<Ring>();
+		this.leftBetweenRings = new ArrayList<Ring>();
+		this.rightBetweenRings = new ArrayList<Ring>();
+		this.upBetweenRings = new ArrayList<Ring>();
+		this.maxPointsIndex = new ArrayList<Integer>();
 		this.myThreshold = myThreshold;
 		this.startingPoint = startingPoint;
 	}
@@ -50,7 +56,22 @@ public class Detector
 				Point end = currentPixel;
 				Ring currentRing = new Ring(start, end, end.x - start.x, "Right");
 				this.rings.add(currentRing);
-				// this.rightRings.add(currentRing);
+			}
+			else
+			{
+				int width = 0;
+				Point start = currentPixel;
+				while (!isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x + 1, currentPixel.y))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.BLUE.getRGB());
+					this.myImage.setRGB(currentPixel.x, currentPixel.y - 1, Color.BLUE.getRGB());
+					this.myImage.setRGB(currentPixel.x, currentPixel.y + 1, Color.BLUE.getRGB());
+					width++;
+					currentPixel.setLocation(currentPixel.x + 1, currentPixel.y);
+				}
+				Point end = currentPixel;
+				Ring betweenRings = new Ring(start, end, width, "Right");
+				this.betweenRings.add(betweenRings);
 			}
 			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
 			this.myImage.setRGB(currentPixel.x, currentPixel.y - 1, Color.blue.getRGB());
@@ -80,6 +101,22 @@ public class Detector
 				Point end = currentPixel;
 				Ring currentRing = new Ring(start, end, end.x - start.x, "Left");
 				this.rings.add(currentRing);
+			}
+			else
+			{
+				int width = 0;
+				Point start = currentPixel;
+				while(!isRing(currentPixel, this.myThreshold)&& inBounds(currentPixel.x - 1, currentPixel.y))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
+					this.myImage.setRGB(currentPixel.x, currentPixel.y - 1, Color.blue.getRGB());
+					this.myImage.setRGB(currentPixel.x, currentPixel.y + 1, Color.blue.getRGB());
+					width++;
+					currentPixel.setLocation(currentPixel.x - 1, currentPixel.y);
+				}
+				Point end = currentPixel;
+				Ring betweenRings = new Ring(start, end, width, "Left");
+				this.betweenRings.add(betweenRings);				
 			}
 			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.blue.getRGB());
 			this.myImage.setRGB(currentPixel.x, currentPixel.y - 1, Color.blue.getRGB());
@@ -111,6 +148,22 @@ public class Detector
 				Ring currentRing = new Ring(start, end, end.y - start.y, "Up");
 				this.rings.add(currentRing);
 			}
+			else
+			{
+				int width = 0;
+				Point start = currentPixel;
+				while (!isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x, currentPixel.y - 1))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.BLUE.getRGB());
+					this.myImage.setRGB(currentPixel.x - 1, currentPixel.y, Color.BLUE.getRGB());
+					this.myImage.setRGB(currentPixel.x + 1, currentPixel.y, Color.BLUE.getRGB());
+					width++;
+					currentPixel.setLocation(currentPixel.x, currentPixel.y - 1);
+				}
+				Point end = currentPixel;
+				Ring betweenRings = new Ring(start, end, width, "Up");
+				this.betweenRings.add(betweenRings);
+			}
 			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.BLUE.getRGB());
 			this.myImage.setRGB(currentPixel.x - 1, currentPixel.y, Color.BLUE.getRGB());
 			this.myImage.setRGB(currentPixel.x + 1, currentPixel.y, Color.BLUE.getRGB());
@@ -140,6 +193,23 @@ public class Detector
 				Ring currentRing = new Ring(start, end, end.y - start.y, "Down");
 				this.rings.add(currentRing);
 			}
+			else
+			{
+				int width = 0;
+				Point start = currentPixel;
+				while (!isRing(currentPixel, this.myThreshold) && inBounds(currentPixel.x, currentPixel.y + 1))
+				{
+					this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.BLUE.getRGB());
+					this.myImage.setRGB(currentPixel.x - 1, currentPixel.y, Color.BLUE.getRGB());
+					this.myImage.setRGB(currentPixel.x + 1, currentPixel.y, Color.BLUE.getRGB());
+					width++;
+					currentPixel.setLocation(currentPixel.x, currentPixel.y + 1);
+				}
+				Point end = currentPixel;
+				Ring betweenRings = new Ring(start, end, width, "Down");
+				this.betweenRings.add(betweenRings);
+			}
+			
 			this.myImage.setRGB(currentPixel.x, currentPixel.y, Color.BLUE.getRGB());
 			this.myImage.setRGB(currentPixel.x - 1, currentPixel.y, Color.BLUE.getRGB());
 			this.myImage.setRGB(currentPixel.x + 1, currentPixel.y, Color.BLUE.getRGB());
@@ -149,106 +219,136 @@ public class Detector
 
 	public int findAge()
 	{
-		// TODO starting point is getting changed. so if we go right first then
-		// up,
-		// it works for going right, but then starting point is 499 and we go up
-		// the right edge of the picture
 		int sum = 0;
 		int numOfDirections = 0;
 		if (this.right)
 		{
 			sum += searchRight();
+			int max = 0;
+			int index = 0;
+			splitBetweenRings();
+			for(int i = 0; i < rightBetweenRings.size(); i++)
+			{
+				Ring curr = rightBetweenRings.get(i);
+				if(curr.getDirection().equals("Right"))
+				{
+					if(curr.getWidth() > max)
+					{
+						max = curr.getWidth();
+						index = i;
+					}
+				}
+			}
+			if(index > 0)
+			{
+				maxPointsIndex.add(index);
+			}
 			numOfDirections++;
 		}
 
 		if (this.left)
 		{
 			sum += searchLeft();
+			int max = 0;
+			int index = 0;
+			splitBetweenRings();
+			for(int i = 0; i < leftBetweenRings.size(); i++)
+			{
+				Ring curr = leftBetweenRings.get(i);
+				if(curr.getDirection().equals("Left"))
+				{
+					if(curr.getWidth() > max)
+					{
+						max = curr.getWidth();
+						index = i;
+					}
+				}
+			}
+			if(index > 0)
+			{
+				maxPointsIndex.add(index);
+			}
 			numOfDirections++;
 		}
 
 		if (this.up)
 		{
 			sum += searchUp();
+			int max = 0;
+			int index = 0;
+			splitBetweenRings();
+			for(int i = 0; i < upBetweenRings.size(); i++)
+			{
+				Ring curr = upBetweenRings.get(i);
+				if(curr.getDirection().equals("Up"))
+				{
+					if(curr.getWidth() > max)
+					{
+						max = curr.getWidth();
+						index = i;
+					}
+				}
+			}
+			if(index > 0)
+			{
+				maxPointsIndex.add(index);
+			}
 			numOfDirections++;
 		}
 
 		if (this.down)
 		{
 			sum += searchDown();
+			int max = 0;
+			int index = 0;
+			splitBetweenRings();
+			for(int i = 0; i < downBetweenRings.size(); i++)
+			{
+				Ring curr = downBetweenRings.get(i);
+				if(curr.getDirection().equals("Down"))
+				{
+					if(curr.getWidth() > max)
+					{
+						max = curr.getWidth();
+						index = i;
+					}
+				}
+			}
+			if(index > 0)
+			{
+				maxPointsIndex.add(index);
+			}
 			numOfDirections++;
 		}
 		return sum / numOfDirections;
 	}
-
-	public void getLargestFive()
+	
+	public ArrayList<Integer> getMaxPoints()
 	{
-		// int[] large = new int[5];
-		int max = 0;
-
-		if (rings.size() > 5)
-		{
-			for (int j = 0; j < 5; j++)
-			{
-				for (int i = 0; i < rings.size(); i++)
-				{
-					Ring currRing = rings.get(j);
-					if (currRing.getWidth() > max)
-					{
-						max = currRing.getWidth();
-					}
-				}
-
-			}
-		}
+		return maxPointsIndex;
 	}
 
-	private void repaintRing(Ring ring)
+	private void splitBetweenRings()
 	{
-		String direction = ring.getDirection();
-
-		if (direction.equals("Up"))
+		for(Ring ring : betweenRings)
 		{
-			Point initial = ring.getStart();
-			Point end = ring.getEnd();
-			while (initial.y > end.y)
+			if(ring.getDirection().equals("Down"))
 			{
-				this.myImage.setRGB(initial.x, initial.y, Color.GREEN.getRGB());
-				initial.setLocation(initial.x, initial.y--);
+				downBetweenRings.add(ring);
+			}
+			else if(ring.getDirection().equals("Left"))
+			{
+				leftBetweenRings.add(ring);
+			}
+			else if(ring.getDirection().equals("Right"))
+			{
+				rightBetweenRings.add(ring);
+			}
+			else
+			{
+				upBetweenRings.add(ring);
 			}
 		}
-		else if (direction.equals("Down"))
-		{
-			Point initial = ring.getStart();
-			Point end = ring.getEnd();
-			while (initial.y < end.y)
-			{
-				this.myImage.setRGB(initial.x, initial.y, Color.GREEN.getRGB());
-				initial.setLocation(initial.x, initial.y++);
-			}
-		}
-		else if (direction.equals("Left"))
-			;
-		{
-			Point initial = ring.getStart();
-			Point end = ring.getEnd();
-			while (initial.x > end.x)
-			{
-				this.myImage.setRGB(initial.x, initial.y, Color.GREEN.getRGB());
-				initial.setLocation(initial.x, initial.y++);
-			}
-		}
-		// else
-		// {
-		// //right
-		// Point initial = ring.getStart();
-		// Point end = ring.getEnd();
-		// while(initial.x < end.x)
-		// {
-		// this.myImage.setRGB(initial.x, initial.y, Color.GREEN.getRGB());
-		// initial.setLocation(initial.x, initial.y++);
-		// }
-		// }
 	}
 
 	private boolean isRing(Point pixel, int threshold)
