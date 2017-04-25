@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -67,10 +68,12 @@ public class GUI extends JFrame implements Constants
 			JTextField pathToImage = new JTextField(15);
 			JLabel pathTextFieldLabel = new JLabel(PATH_TEXTFIELD);
 
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			InputStream getLogo = classLoader.getResourceAsStream(TITLE_IMAGE);
 			try
 			{
 				// add image to title page
-				Image titleImage = ImageIO.read(new File(TITLE_IMAGE));
+				Image titleImage = ImageIO.read(getLogo);
 				Image newImage = titleImage.getScaledInstance(200, 200, 200);
 				imageLabel.setIcon(new ImageIcon(newImage));
 				titlePanel.add(imageLabel);
@@ -492,7 +495,16 @@ public class GUI extends JFrame implements Constants
 		setSize(screenSize);
 
 		// set background
-		setContentPane(new JLabel(new ImageIcon(PATH_TO_BACKGROUND_IMAGE)));
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		InputStream getBackground = classLoader.getResourceAsStream(PATH_TO_BACKGROUND_IMAGE);
+		try
+		{
+			setContentPane(new JLabel(new ImageIcon(ImageIO.read(getBackground))));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
