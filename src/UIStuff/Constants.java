@@ -17,11 +17,11 @@ public interface Constants
 	public static final String PATH_TO_BACKGROUND_IMAGE = "forestBackground.jpg";
 	public static final String WEBPAGE = "https://www.ncdc.noaa.gov/temp-and-precip/state-temps/";
 	public static final String IMAGE_NOT_FOUND = "Couldn't find image. Try again";
-	
-	//point choosing
+
+	// point choosing
 	public static final String TOO_CLOSE_TO_EDGE = "Point too close to edge, choose anoter point closer to center of image";
 	public static final String CHOOSE_THRESHOLD = "Almost done! Now choose a point between the rings.\n"
-	+ "This will be used as a threshold, to detect the darker color of the rings.";
+			+ "This will be used as a threshold, to detect the darker color of the rings.";
 	public static final String OUT_OF_BOUNDS_TEXT = "Must choose point on image";
 	public static final String CHOOSE_CENTER = "Click center of tree cookie";
 

@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import analysisStuff.Detector;
+import analysisStuff.TreeObj;
 
 /**
  * GUI contains the main user interface data and functionality. This is where
@@ -27,6 +28,13 @@ public class GUI extends JFrame implements Constants
 {
 	GUIPanel uploadPanel;
 
+	/**
+	 * GUIPanel extends Jpanel. It is used to setup the different panels used in
+	 * the User interface
+	 * 
+	 * @author JonathanThomas
+	 * @version 4/28/17
+	 */
 	private class GUIPanel extends JPanel
 	{
 		private int numClicks = 0;
@@ -36,6 +44,9 @@ public class GUI extends JFrame implements Constants
 		private File originalFile = null;
 		private ArrayList<Integer> maxEdges = null;
 
+		/**
+		 * Guipanel constructor. Constructs initial uploading panel
+		 */
 		public GUIPanel()
 		{
 			JPanel masterPanel = new JPanel(new GridLayout(2, 1));
@@ -335,6 +346,12 @@ public class GUI extends JFrame implements Constants
 			return resizedImage;
 		}
 
+		/**
+		 * Constructs the panel containing all the analysis data
+		 * 
+		 * @param myTree
+		 *            - tree whose data is being used
+		 */
 		public void resultGUI(TreeObj myTree)
 		{
 			removeAll();
@@ -402,6 +419,7 @@ public class GUI extends JFrame implements Constants
 									else
 									{
 										moreInfo.setEnabled(true);
+										addDeathYear.setEnabled(false);
 										accepted = true;
 										String years = "";
 										for (int i = 0; i < maxEdges.size() - 1; i++)

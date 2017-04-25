@@ -1,4 +1,4 @@
-package UIStuff;
+package analysisStuff;
 
 import java.awt.Image;
 
