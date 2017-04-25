@@ -1,5 +1,6 @@
-# Capstone
-RingReader
+# RingReader
+Jonathan Thomas (2017)
+
 This is a capstone project, coded in Java, that uses image analysis to detect and count tree rings from an image.
 
 Each class has its own documentation, but here is a brief rundown of how the system works.
@@ -21,3 +22,7 @@ TreeObj is a tree object. It contains fields such as age and image, where image 
 Ring is a ring object. It contains fields such as width and starting/ending points. A new ring is created each time a darker pixel is detected by detector.
 
 Detector is responsible for the detection of darker pixels. It has a threshold, starting point, and an array representing which direction(s) to measure in. Detector works outward, from the starting point, in each direction until it hits the edge of the image. It evaluates the color values of all pixels it encounters along the way. The pixel color values are all normalized by dividing by 100,000 to reduce the range of their color values. This allows for more accurate color analysis.
+
+This project has been exported as an executable jar file with all the necessary dependencies and libraries. The only main dependencies for this project are the background image and the logo (both located in the images folder)To run the program, simply open the RingReader.jar file
+
+© 2017 Jonathan Thomas
