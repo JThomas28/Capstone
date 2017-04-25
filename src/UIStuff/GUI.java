@@ -16,8 +16,9 @@ import javax.swing.*;
 import analysisStuff.Detector;
 
 /**
- * GUI contains the main user interface data and functionality. 
- * This is where the program begins and it calls other classes and methods as needed
+ * GUI contains the main user interface data and functionality. This is where
+ * the program begins and it calls other classes and methods as needed
+ * 
  * @author JonathanThomas
  * @version 4/28/17
  */
@@ -87,7 +88,7 @@ public class GUI extends JFrame implements Constants
 				public void actionPerformed(ActionEvent e)
 				{
 					// make sure file is jpg or png image
-					if (pathToImage.getText().endsWith(".jpg") || pathToImage.getText().endsWith(".png"))
+					if (pathToImage.getText().endsWith(JPG) || pathToImage.getText().endsWith(PNG))
 					{
 						File imageFile = new File(pathToImage.getText());
 						originalFile = imageFile;
@@ -131,7 +132,7 @@ public class GUI extends JFrame implements Constants
 			catch (Exception exception)
 			{
 				exception.printStackTrace();
-				JOptionPane.showConfirmDialog(null, "Couldn't find image. Try again");
+				JOptionPane.showConfirmDialog(null, IMAGE_NOT_FOUND);
 			}
 			return myBuffImage;
 		}
@@ -193,16 +194,13 @@ public class GUI extends JFrame implements Constants
 							// can't choose point too close to edge
 							if (centerPoint.x < 4 || centerPoint.x > 496 || centerPoint.y < 4 || centerPoint.y > 496)
 							{
-								JOptionPane.showMessageDialog(getContentPane(),
-										"Point too close to edge, choose anoter point closer to center of image");
+								JOptionPane.showMessageDialog(getContentPane(), TOO_CLOSE_TO_EDGE);
 								numClicks = 0;
 							}
 							else
 							{
 								myEdges = getEdgesToMeasureTo();
-								JOptionPane.showMessageDialog(getContentPane(),
-										"Almost done! Now choose a point between the rings.\n"
-												+ "This will be used as a threshold, to detect the darker color of the rings.");
+								JOptionPane.showMessageDialog(getContentPane(), CHOOSE_THRESHOLD);
 							}
 						}
 
@@ -214,7 +212,7 @@ public class GUI extends JFrame implements Constants
 					}
 					catch (ArrayIndexOutOfBoundsException exc)
 					{
-						JOptionPane.showMessageDialog(getContentPane(), "Must choose point on image");
+						JOptionPane.showMessageDialog(getContentPane(), OUT_OF_BOUNDS_TEXT);
 						numClicks = 2;
 					}
 				}
@@ -223,7 +221,7 @@ public class GUI extends JFrame implements Constants
 			add(picPanel);
 			revalidate();
 			repaint();
-			JOptionPane.showMessageDialog(getContentPane(), "Click center of tree cookie");
+			JOptionPane.showMessageDialog(getContentPane(), CHOOSE_CENTER);
 		}
 
 		/**
@@ -318,10 +316,13 @@ public class GUI extends JFrame implements Constants
 		}
 
 		/**
-		 * Resizes image passed in to 500 by 500. 
-		 * Useful because all images will be 500 pixels by 500
-		 * @param originalImage - image passed in. (Pre-resize)
-		 * @param type - type of image
+		 * Resizes image passed in to 500 by 500. Useful because all images will
+		 * be 500 pixels by 500
+		 * 
+		 * @param originalImage
+		 *            - image passed in. (Pre-resize)
+		 * @param type
+		 *            - type of image
 		 * @return resized buffered image
 		 */
 		private BufferedImage resizeImage(BufferedImage originalImage, int type)
@@ -352,15 +353,14 @@ public class GUI extends JFrame implements Constants
 
 			JLabel image = new JLabel(new ImageIcon(myImage));
 
-			JLabel information = new JLabel(
-					"<html><div style='text-align: center;'>" + Constants.INFORMATION + "</div></html>");
+			JLabel information = new JLabel(INFORMATION);
 			JButton moreInfo = new JButton(Constants.MORE_INFO);
-			JLabel ageLabel = new JLabel("Estimated age: " + myTree.getAge() + "");
+			JLabel ageLabel = new JLabel(ESTIMATED_AGE + myTree.getAge() + "");
 			JButton addDeathYear = new JButton(ADD_DEATH_YEAR);
 			JLabel greaterGrowth = new JLabel();
 
-			information.setFont(new Font("Serif", Font.BOLD, 20));
-			ageLabel.setFont(new Font("Serif", Font.BOLD, 16));
+			information.setFont(new Font(FONT, Font.BOLD, 20));
+			ageLabel.setFont(new Font(FONT, Font.BOLD, 16));
 			information.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 			panel.add(information);
@@ -372,7 +372,7 @@ public class GUI extends JFrame implements Constants
 			moreInfo.setEnabled(false);
 			if (myTree.getAge() <= 5 || maxEdges.size() == 0)
 			{
-				//need 5 rings before we can add a death year
+				// need 5 rings before we can add a death year
 				addDeathYear.setEnabled(false);
 			}
 
@@ -406,12 +406,14 @@ public class GUI extends JFrame implements Constants
 										String years = "";
 										for (int i = 0; i < maxEdges.size() - 1; i++)
 										{
-											years += (deathYear - myTree.getAge()) + maxEdges.get(i) + ",";
+											years += Integer.toString((deathYear - myTree.getAge()) + maxEdges.get(i))
+													+ ", ";
 										}
-										years += deathYear - myTree.getAge() + maxEdges.get(maxEdges.size() - 1);
+										years += Integer.toString(
+												(deathYear - myTree.getAge()) + maxEdges.get(maxEdges.size() - 1));
 										greaterGrowth.setText(MORE_THAN_AVERAGE + (years));
 										panel.add(greaterGrowth);
-										
+
 										panel.add(Box.createRigidArea(new Dimension(0, 42)));
 										panel.add(Box.createRigidArea(new Dimension(0, 42)));
 										panel.revalidate();
@@ -420,7 +422,7 @@ public class GUI extends JFrame implements Constants
 								}
 								catch (NumberFormatException e2)
 								{
-									JOptionPane.showMessageDialog(null, "Year must be a number");
+									JOptionPane.showMessageDialog(null, YEAR_NUMBER);
 								}
 							}
 						}
@@ -430,8 +432,8 @@ public class GUI extends JFrame implements Constants
 					}
 				}
 			});
-			
-			//listener for moreinfo button. Opens webpage in default browser
+
+			// listener for moreinfo button. Opens webpage in default browser
 			moreInfo.addActionListener(new ActionListener()
 			{
 				@Override
@@ -447,7 +449,7 @@ public class GUI extends JFrame implements Constants
 					}
 				}
 			});
-			
+
 			panel.add(moreInfo);
 			panel.add(Box.createRigidArea(new Dimension(0, 42)));
 			panel.add(addDeathYear);
@@ -467,7 +469,7 @@ public class GUI extends JFrame implements Constants
 		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		//GUI fills screen
+		// GUI fills screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
 
@@ -494,20 +496,19 @@ public class GUI extends JFrame implements Constants
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				int result = JOptionPane.showConfirmDialog(GUI.this, ANALYZE_NEW, CONFIRM,
-						JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(GUI.this, ANALYZE_NEW, CONFIRM, JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION)
 				{
 					FileChooser.main(null);
 					panel.originalFile = FileChooser.getFile();
 					panel.myImage = panel.getImageFromFile(FileChooser.getFile());
 					panel.numClicks = 0;
-					
+
 					BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
 					int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
 					panel.myImage = panel.resizeImage(myBuffImage, type);
 					panel.repaint();
-					
+
 					panel.choosePoints(new TreeObj(0, panel.myImage));
 					getContentPane().add(panel);
 				}
@@ -521,10 +522,10 @@ public class GUI extends JFrame implements Constants
 			{
 				panel.myImage = panel.getImageFromFile(panel.originalFile);
 				panel.numClicks = 0;
-				
+
 				BufferedImage myBuffImage = panel.toBufferedImage(panel.myImage);
 				int type = myBuffImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : myBuffImage.getType();
-				
+
 				panel.myImage = panel.resizeImage(myBuffImage, type);
 				panel.repaint();
 				panel.choosePoints(new TreeObj(0, panel.myImage));
@@ -536,6 +537,7 @@ public class GUI extends JFrame implements Constants
 
 	/**
 	 * Creates and shows GUI
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args)
